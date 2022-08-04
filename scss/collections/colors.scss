@@ -1,0 +1,46 @@
+// Nombres de Colores de la Paleta
+$colors: (
+    "Black": #000000,
+    "White": #fbfcff,
+    "RocketMetallic": #887880,
+    "LightGray": #d0ccd0,
+    "Platinum": #eaeaea,
+    "RussianViolet": #2E0249,
+    "PalatinatePurple": #570a57,
+    "FlickrPink": #ed217c,
+    "ParadisePink": #e63462,
+    "Cinnabar": #d64933,
+    "Flame": #d95d39,
+    "DarkOrange": #ff9000,
+    "Tangerine": #f18805,
+    "Marigold": #eca400,
+    "MikadoYellow": #fec601,
+    "Canary": #fffd82,
+    "Nyanza": #f3ffe1,
+    "AeroBlue": #cbf3d2,
+    "PakistanGreen": #036d19,
+    "ShinyShamrock": #519872,
+    "Emerald": #14cc60,
+    "SpringGreen": #27fb6b,
+    "PaleSpringBud": #eaf8bf,
+    "BlueSaphire": #1c6e8c,
+    "NonPhotoBlue": #a6e1fa,
+    "PowderBlue": #c2dfe3,
+    "LightCyan": #e0fbfc,
+);
+
+// Colores del tema claro
+$light-theme-colors: (
+    "BackgroundColor": map-get($map: $colors, $key: "White"),
+    "TextColor": map-get($map: $colors, $key: "RussianViolet"),
+    "BorderColor": map-get($map: $colors, $key: "FlickrPink"),
+    "DisabledTextColor": map-get($map: $colors, $key: "RocketMetallic"),
+);
+
+// Colores del tema obscuro
+$dark-theme-colors: (
+    "BackGroundColor": map-get($map: $colors, $key: "RussianViolet"),
+    "TextColor": map-get($map: $colors, $key: "Canary"),
+    "BorderColor": map-get($map: $colors, $key: "Marigold"),
+    "DisabledTextColor": map-get($map: $colors, $key: "PowderBlue"),
+);

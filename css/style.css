@@ -1,0 +1,74 @@
+@import url("https://fonts.googleapis.com/css2?family=Albert+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Cutive+Mono&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Pacifico&display=swap");
+.container {
+  color: #2E0249;
+  background-color: #fbfcff;
+  font-family: "Albert Sans";
+}
+.container .main-menu {
+  list-style: none;
+  margin: 0;
+  display: flex;
+}
+.container .main-menu .menu-item {
+  margin: 0.5rem 1rem;
+}
+.container .main-menu .menu-item a {
+  text-decoration: none;
+}
+.container .main-menu .menu-item .active {
+  font-weight: bold;
+}
+.container .main-menu .menu-item .disabled {
+  color: #887880;
+}
+.container .checkers-board {
+  display: flex;
+  flex-direction: column;
+  border: solid medium #ed217c;
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
+}
+.container .checkers-board .row {
+  display: flex;
+  flex-wrap: nowrap;
+}
+.container .checkers-board .row .cell {
+  width: 25px;
+  height: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.container .checkers-board .row:nth-child(odd) .cell:nth-child(odd) {
+  background-color: #fbfcff;
+}
+.container .checkers-board .row:nth-child(odd) .cell:nth-child(even) {
+  background-color: #000000;
+}
+.container .checkers-board .row:nth-child(even) .cell:nth-child(even) {
+  background-color: #fbfcff;
+}
+.container .checkers-board .row:nth-child(even) .cell:nth-child(odd) {
+  background-color: #000000;
+}
+.container .checkers-board .token {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  padding: 0;
+  border-radius: 50%;
+}
+.container .checkers-board .ai {
+  border: solid thin #eca400;
+  background-color: #fec601;
+}
+.container .checkers-board .player {
+  border: solid thin #e0fbfc;
+  background-color: #570a57;
+}/*# sourceMappingURL=style.css.map */

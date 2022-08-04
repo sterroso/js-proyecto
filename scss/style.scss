@@ -1,0 +1,75 @@
+// Imports y Uses
+@use "collections/colors.scss";
+@use "collections/fonts.scss";
+@use "mixins/lists.scss";
+
+// Cuerpo principal
+.container {
+    color: map-get($map: colors.$light-theme-colors, $key: "TextColor");
+    background-color: map-get($map: colors.$light-theme-colors, $key: "BackgroundColor");
+    font-family: map-get($map: fonts.$theme-fonts, $key: "MainFont");
+
+    .main-menu {
+        @include lists.menu-list;
+    }
+
+    .checkers-board {
+        display: flex;
+        flex-direction: column;
+        border: solid medium map-get($map: colors.$light-theme-colors, $key: "BorderColor");
+        width: min-content;
+
+        .row {
+            display: flex;
+            flex-wrap: nowrap;
+
+            .cell {
+                width: 25px;
+                height: 25px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+        }
+
+        .row:nth-child(odd) {
+            .cell:nth-child(odd) {
+                background-color: map-get($map: colors.$colors, $key: "White");
+            }
+
+            .cell:nth-child(even) {
+                background-color: map-get($map: colors.$colors, $key: "Black");
+            }
+        }
+
+        .row:nth-child(even) {
+            .cell:nth-child(even) {
+                background-color: map-get($map: colors.$colors, $key: "White");
+            }
+
+            .cell:nth-child(odd) {
+                background-color: map-get($map: colors.$colors, $key: "Black");
+            }
+        }
+
+        .token {
+            width: 18px;
+            height: 18px;
+            margin: 0;
+            padding: 0;
+            border-radius: 50%;
+        }
+
+        .ai {
+            border: solid thin map-get($map: colors.$colors, $key: "Marigold");
+            background-color: map-get($map: colors.$colors, $key: "MikadoYellow");
+        }
+
+        .player {
+            border: solid thin map-get($map: colors.$colors, $key: "LightCyan");
+            background-color: map-get($map: colors.$colors, $key: "PalatinatePurple");
+        }
+    }
+
+    
+}
