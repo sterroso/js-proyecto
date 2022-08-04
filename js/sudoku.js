@@ -181,18 +181,7 @@ class Board {
     }
 
     #populateBoard = () => {
-        let rows = [
-            [],  // Fila 0, va desde (0, 0) hasta (8, 0)
-            [],  // Fila 1, va desde (0, 1) hasta (8, 1)
-            [],  // Fila 2, va desde (0, 2) hasta (8, 2)
-            [],  // Fila 3, va desde (0, 3) hasta (8, 3)
-            [],  // Fila 4, va desde (0, 4) hasta (8, 4)
-            [],  // Fila 5, va desde (0, 5) hasta (8, 5)
-            [],  // Fila 6, va desde (0, 6) hasta (8, 6)
-            [],  // Fila 7, va desde (0, 7) hasta (8, 7)
-            []   // Fila 8, va desde (0, 8) hasta (8, 8)
-        ]
-
+        // Lleva control de las columnas.
         let cols = [
             [],  // Columna 0, va desde (0, 0) hasta (0, 8)
             [],  // Columna 1, va desde (1, 0) hasta (1, 8)
@@ -205,6 +194,7 @@ class Board {
             []   // Columna 8, va desde (8, 0) hasta (8, 8)
         ]
 
+        // Lleva control de los cuadros.
         let squares = [
             [],  // Cuadro 0, va desde (0, 0) hasta (2, 2) - cuadro superior izquierdo
             [],  // Cuadro 1, va desde (3, 0) hasta (5, 2) - cuadro superior central
@@ -225,18 +215,25 @@ class Board {
             for(let row = 0; row < Board.#NUM_ROWS; row++) {
                 squareIndex = Board.getSquareIndex(col, row);
 
+                console.debug(`col: ${col}, row: ${row}\n`, 'cols: ', cols, '\n', 'squares: ', squares, '\n', 'cells: ', this._cells);
+
                 do {
                     value = Math.floor(Math.random() * (Cell.getMaxValue() + 1 - Cell.getMinValue())) + Cell.getMinValue();
                 } while(
-                    rows[col].find(rowItem => rowItem === value) || 
-                    cols[col].find(colItem => colItem === value) || 
-                    squares[col].find(squareItem => squareItem === value)
+                    this._cells[col].find(cellItem => {
+                        if(cellItem && cellItem.value === value) return true;
+
+                        return false;
+                    }) || 
+                    cols[col].find(colValue => colValue === value) || 
+                    squares[squareIndex].find(squareItem => squareItem === value)
                     );
                 
-                rows[col][row] = value;
-                cols[col][row] = value;
-                squares[squareIndex].push(value);
                 this._cells[col][row] = new Cell(value);
+                cols[col].push(value);
+                squares[squareIndex].push(value);
+
+                console.debug(`col: ${col}, row: ${row}\n`, 'cols: ', cols, '\n', 'squares: ', squares, '\n', 'cells: ', this._cells);
             }
         }
     }
