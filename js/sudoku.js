@@ -1,9 +1,13 @@
 /**
+ * Web Browser Sudoku
+ * 
  * El juego de Sudoku parece muy simple. El objetivo es llenar una cuadrícula de 9
  * filas y 9 columnas, dividida en 9 submatrices, cada una de tres (3) filas y tres
  * (3) columnas, con números del uno (1) al nueve (9), en ningún orden particular, sin 
  * que estos se repitan en una misma fila, en una misma columna, ni en la submatriz en 
  * la que se encuentra cada celda.
+ * 
+ * El Tablero de Sudoku
  * 
  * Un tablero, correctamente lleno, debe verse como el siguiente:
  * 
@@ -27,10 +31,14 @@
  * ||  1  |  4  |  8  ||  3  |  6  |  2  ||  9  |  5  |  7  ||  |
  * ++=====+=====+=====++=====+=====+=====++=====+=====+=====++ /
  * 
+ * Objetivo del juego
+ * 
  * Una vez que el tablero se encuentra completamente lleno, se borran algunos números
  * en unicaciones aleatorias, dejando suficientes pistas para que el jugador pueda 
  * resolver el tablero rellenando los espacios en blanco, considerando las reglas antes 
  * mencionadas.
+ * 
+ * Alcances del proyecto
  * 
  * El código debe ser capaz de:
  * 
@@ -39,6 +47,8 @@
  *    pueda llenarlos, de acuerdo con las reglas del Sudoku, y llegar al mismo
  *    tablero generado en el paso 1.
  * 3. Validar las respuestas del jugador contra el tablero generado en el paso 1.
+ * 
+ * Características adicionales
  * 
  * Además, sería ideal que la interfaz sea capaz de permitir, al jugador, contar con 
  * algunas pistas visuales que le permita visualizar con mayor facilidad la fila, 
