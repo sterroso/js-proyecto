@@ -135,7 +135,20 @@ class Board {
             this._cells[i] = new Array(Board.#NUM_COLS);
         }
 
-        this.#populateBoard();
+        this._grid = [
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0]
+        ];
+
+        this.#populateBoard(this._grid);
+        console.debug(this._grid);
     }
 
     /**
@@ -180,61 +193,163 @@ class Board {
         return this._solved;
     }
 
-    #populateBoard = () => {
-        // Lleva control de las columnas.
-        let cols = [
-            [],  // Columna 0, va desde (0, 0) hasta (0, 8)
-            [],  // Columna 1, va desde (1, 0) hasta (1, 8)
-            [],  // Columna 2, va desde (2, 0) hasta (2, 8)
-            [],  // Columna 3, va desde (3, 0) hasta (3, 8)
-            [],  // Columna 4, va desde (4, 0) hasta (4, 8)
-            [],  // Columna 5, va desde (5, 0) hasta (5, 8)
-            [],  // Columna 6, va desde (6, 0) hasta (6, 8)
-            [],  // Columna 7, va desde (7, 0) hasta (7, 8)
-            []   // Columna 8, va desde (8, 0) hasta (8, 8)
-        ]
+    /**
+     * Desordena aleatoriamente un arreglo.
+     * 
+     * @param {Array} array Arreglo a desordenar aleatoriamente.
+     * @returns El nuevo arreglo desordenado.
+     */
+    #shuffleArray(array) {
+        const itemCount = array.length;
+        let newArray = [];
+        let randomIndex = 0;
 
-        // Lleva control de los cuadros.
-        let squares = [
-            [],  // Cuadro 0, va desde (0, 0) hasta (2, 2) - cuadro superior izquierdo
-            [],  // Cuadro 1, va desde (3, 0) hasta (5, 2) - cuadro superior central
-            [],  // Cuadro 2, va desde (6, 0) hasta (8, 2) - cuadro superior derecho
-            [],  // Cuadro 3, va desde (0, 3) hasta (2, 5) - cuadro medio izquierdo
-            [],  // Cuadro 4, va desde (3, 3) hasta (5, 5) - cuadro medio central
-            [],  // Cuadro 5, va desde (6, 3) hasta (8, 5) - cuadro medio derecho
-            [],  // Cuadro 6, va desde (0, 6) hasta (2, 8) - cuadro inferior izquierdo
-            [],  // Cuadro 7, va desde (3, 6) hasta (5, 8) - cuadro inferior central
-            []   // Cuadro 8, va desde (6, 6) hasta (8, 8) - cuadro inferior derecho
-        ]
+        for(let i = 0; i < itemCount; i++) {
+            randomIndex = Math.floor(Math.random() * array.length);
+            newArray.push(array.splice(randomIndex, 1));
+        }
 
-        let squareIndex = -1;
+        return newArray;
+    }
 
-        let value = -1;
+    /**
+     * Llena una grilla con valores de Sudoku.
+     * 
+     * @param {Array} grid La grilla que se va a poblar con valores de Sudoku.
+     * @returns true si la grilla pudo ser llenada con valores de Sudoku, false de lo contrario.
+     */
+    #populateBoard = (grid) => {
+        // Arreglo inicial de valores válidos.
+        this._numberList = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
-        for(let col = 0; col < Board.#NUM_COLS; col++) {
-            for(let row = 0; row < Board.#NUM_ROWS; row++) {
-                squareIndex = Board.getSquareIndex(col, row);
+        for (let i = 0; i < 81; i++) {
+            let intRow = Math.floor(i / 9);
+            let intCol = i % 9;
 
-                console.debug(`col: ${col}, row: ${row}\n`, 'cols: ', cols, '\n', 'squares: ', squares, '\n', 'cells: ', this._cells);
+            if (grid[intRow][intCol] === 0) {
+                this._numberList = this.#shuffleArray(this._numberList);
 
-                do {
-                    value = Math.floor(Math.random() * (Cell.getMaxValue() + 1 - Cell.getMinValue())) + Cell.getMinValue();
-                } while(
-                    this._cells[col].find(cellItem => {
-                        if(cellItem && cellItem.value === value) return true;
+                this._numberList.forEach(value => {
+                    if (grid[intRow].indexOf(value) === -1) {
+                        let colArray = grid.map(item => item[intCol]);
 
-                        return false;
-                    }) || 
-                    cols[col].find(colValue => colValue === value) || 
-                    squares[squareIndex].find(squareItem => squareItem === value)
-                    );
-                
-                this._cells[col][row] = new Cell(value);
-                cols[col].push(value);
-                squares[squareIndex].push(value);
+                        if (colArray.indexOf(value) === -1) {
+                            let squareArray = [];
 
-                console.debug(`col: ${col}, row: ${row}\n`, 'cols: ', cols, '\n', 'squares: ', squares, '\n', 'cells: ', this._cells);
+                            switch (intRow) {
+                                case 0:
+                                case 1:
+                                case 2:
+                                    switch (intCol) {
+                                        case 0:
+                                        case 1:
+                                        case 2:
+                                            for (let j = 0; j < 3; j++) {
+                                                for (let k = 0; k < 3; k++) {
+                                                    squareArray.push(grid[j][k]);
+                                                }
+                                            }
+                                            break;
+                                        case 3:
+                                        case 4:
+                                        case 5:
+                                            for (let j = 0; j < 3; j++) {
+                                                for (let k = 3; k < 6; k++) {
+                                                    squareArray.push(grid[j][k]);
+                                                }
+                                            }
+                                            break;
+                                        case 6:
+                                        case 7:
+                                        case 8:
+                                            for (let j = 0; j < 3; j++) {
+                                                for (let k = 6; k < 9; k++) {
+                                                    squareArray.push(grid[j][k]);
+                                                }
+                                            }
+                                            break;
+                                    }
+                                    break;
+                                case 3:
+                                case 4:
+                                case 5:
+                                    switch (intCol) {
+                                        case 0:
+                                        case 1:
+                                        case 2:
+                                            for (let j = 3; j < 6; j++) {
+                                                for (let k = 0; k < 3; k++) {
+                                                    squareArray.push(grid[j][k]);
+                                                }
+                                            }
+                                            break;
+                                        case 3:
+                                        case 4:
+                                        case 5:
+                                            for (let j = 3; j < 6; j++) {
+                                                for (let k = 3; k < 6; k++) {
+                                                    squareArray.push(grid[j][k]);
+                                                }
+                                            }
+                                            break;
+                                        case 6:
+                                        case 7:
+                                        case 8:
+                                            for (let j = 3; j < 6; j++) {
+                                                for (let k = 6; k < 9; k++) {
+                                                    squareArray.push(grid[j][k]);
+                                                }
+                                            }
+                                            break;
+                                    }
+                                    break;
+                                case 6:
+                                case 7:
+                                case 8:
+                                    switch (intCol) {
+                                        case 0:
+                                        case 1:
+                                        case 2:
+                                            for (let j = 6; j < 9; j++) {
+                                                for (let k = 0; k < 3; k++) {
+                                                    squareArray.push(grid[j][k]);
+                                                }
+                                            }
+                                            break;
+                                        case 3:
+                                        case 4:
+                                        case 5:
+                                            for (let j = 6; j < 9; j++) {
+                                                for (let k = 3; k < 6; k++) {
+                                                    squareArray.push(grid[j][k]);
+                                                }
+                                            }
+                                            break;
+                                        case 6:
+                                        case 7:
+                                        case 8:
+                                            for (let j = 6; j < 9; j++) {
+                                                for (let k = 6; k < 9; k++) {
+                                                    squareArray.push(grid[j][k]);
+                                                }
+                                            }
+                                            break;
+                                    }
+                                    break;
+                            }
+                            if (squareArray.indexOf(value) === -1) {
+                                grid[intRow][intCol] = value;
+                                if (Board.isValidGrid(grid)) {
+                                    return true;
+                                } else {
+                                    return this.#populateBoard(grid);
+                                }
+                            }
+                        }
+                    }
+                });
             }
+
         }
     }
 
@@ -245,6 +360,16 @@ class Board {
      */
     toString() {
         return `Tablero de Sudoku. Nivel de dificultad: ${Board.getLevelName(this.level)}.`;
+    }
+
+    /**
+     * Valida si la grilla especificada es válida, según las reglas del Sudoku.
+     * 
+     * @param {Array} grid La grilla bidimensional a validar.
+     * @returns true si la grilla es válida (según las reglas del Sudoku), false de lo contrario.
+     */
+    static isValidGrid(grid) {
+        return true;
     }
 
     /**
@@ -307,53 +432,8 @@ class Board {
 
         return '';
     }
-
-    static getSquareIndex = (columnIndex, rowIndex) => {
-        if (0 <= columnIndex <= 2) {
-            if (0 <= rowIndex <= 2) {
-                return 0;
-            }
-
-            if (3 <= rowIndex <= 5) {
-                return 1;
-            }
-
-            if (6 <= rowIndex <= 8) {
-                return 2;
-            }
-        }
-
-        if (3 <= columnIndex <= 5) {
-            if (0 <= rowIndex <= 2) {
-                return 3;
-            }
-
-            if (3 <= rowIndex <= 5) {
-                return 4;
-            }
-
-            if (6 <= rowIndex <= 8) {
-                return 5;
-            }
-        }
-
-        if (6 <= columnIndex <= 8) {
-            if (0 <= rowIndex <= 2) {
-                return 6;
-            }
-
-            if (3 <= rowIndex <= 5) {
-                return 7;
-            }
-
-            if (6 <= rowIndex <= 8) {
-                return 8;
-            }
-        }
-    }
 }
 
 window.addEventListener('load', event => {
     let board = new Board();
-    console.table(board.cells);
 });
