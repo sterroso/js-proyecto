@@ -1,7 +1,7 @@
 /**
  * Web Browser Sudoku
  * 
- * El juego de Sudoku parece muy simple. El objetivo es llenar una cuadrícula de 9
+ * El juego de Sudoku es muy simple. El objetivo es llenar una cuadrícula de 9
  * filas y 9 columnas, dividida en 9 submatrices, cada una de tres (3) filas y tres
  * (3) columnas, con números del uno (1) al nueve (9), en ningún orden particular, sin 
  * que estos se repitan en una misma fila, en una misma columna, ni en la submatriz en 
@@ -481,5 +481,18 @@ class Board {
 
         return retValue;
     }
+
+
+    /**
+     * Genera una nueva instancia de un tablero de Sudoku con el nivel de dificultad 
+     * especificado.
+     * 
+     * @param {string} level Nivel de dificultad.
+     * @returns Una nueva instancia de un tablero de Sudoku.
+     */
+    static getBoard = level => {
+        return new Board(level);
+    }
 }
+
 
