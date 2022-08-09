@@ -1,3 +1,55 @@
+/**
+ * El juego de Sudoku parece muy simple. El objetivo es llenar una cuadrícula de 9
+ * filas y 9 columnas, dividida en 9 submatrices, cada una de tres (3) filas y tres
+ * (3) columnas, con números del uno (1) al nueve (9), en ningún orden particular, sin 
+ * que estos se repitan en una misma fila, en una misma columna, ni en la submatriz en 
+ * la que se encuentra cada celda.
+ * 
+ * Un tablero, correctamente lleno, debe verse como el siguiente:
+ * 
+ * ++=====+=====+=====++=====+=====+=====++=====+=====+=====++ \ 
+ * ||  4  |  9  |  3  ||  1  |  7  |  6  ||  2  |  8  |  5  ||  |
+ * ++-----+-----+-----++-----+-----+-----++-----+-----+-----++  |
+ * ||  5  |  2  |  7  ||  8  |  4  |  9  ||  1  |  3  |  6  ||  |
+ * ++-----+-----+-----++-----+-----+-----++-----+-----+-----++  |
+ * ||  8  |  1  |  6  ||  2  |  5  |  3  ||  4  |  7  |  9  ||  |
+ * ++=====+=====+=====++=====+=====+=====++=====+=====+=====++  |
+ * ||  2  |  5  |  1  ||  9  |  3  |  7  ||  6  |  4  |  8  ||  |
+ * ++-----+-----+-----++-----+-----+-----++-----+-----+-----++  |   Todos los números, del 1 al 9,
+ * ||  7  |  8  |  4  ||  6  |  2  |  1  ||  5  |  9  |  3  ||   >  sin repetirse en fila, columna
+ * ++-----+-----+-----++-----+-----+-----++-----+-----+-----++  |   o submatriz.
+ * ||  6  |  3  |  9  ||  4  |  8  |  5  ||  7  |  1  |  2  ||  |
+ * ++=====+=====+=====++=====+=====+=====++=====+=====+=====++  |
+ * ||  9  |  6  |  5  ||  7  |  1  |  8  ||  3  |  2  |  4  ||  |
+ * ++-----+-----+-----++-----+-----+-----++-----+-----+-----++  |
+ * ||  3  |  7  |  2  ||  5  |  9  |  4  ||  8  |  6  |  1  ||  |
+ * ++-----+-----+-----++-----+-----+-----++-----+-----+-----++  |
+ * ||  1  |  4  |  8  ||  3  |  6  |  2  ||  9  |  5  |  7  ||  |
+ * ++=====+=====+=====++=====+=====+=====++=====+=====+=====++ /
+ * 
+ * Una vez que el tablero se encuentra completamente lleno, se borran algunos números
+ * en unicaciones aleatorias, dejando suficientes pistas para que el jugador pueda 
+ * resolver el tablero rellenando los espacios en blanco, considerando las reglas antes 
+ * mencionadas.
+ * 
+ * El código debe ser capaz de:
+ * 
+ * 1. Generar un tablero completamente lleno, considerando las reglas del Sudoku.
+ * 2. Dejar algunos espacios en blanco con suficientes pistas para que el jugador
+ *    pueda llenarlos, de acuerdo con las reglas del Sudoku, y llegar al mismo
+ *    tablero generado en el paso 1.
+ * 3. Validar las respuestas del jugador contra el tablero generado en el paso 1.
+ * 
+ * Además, sería ideal que la interfaz sea capaz de permitir, al jugador, contar con 
+ * algunas pistas visuales que le permita visualizar con mayor facilidad la fila, 
+ * columna y submatriz en la que se encuentra, hacer anotaciones de los números 
+ * "candidatos" que pueden colocarse en las celdas vacías, guardar el juego para 
+ * continuarlo en otro momento, elegir entre varios niveles de dificultad, tomar 
+ * el tiempo que le lleva resolver un tablero y llevar registro de sus estadísticas
+ * por nivel de dificultad y tiempo para resolverlo.
+ * 
+ */
+
 // Primero defino los elementos del juego: Celda, Tablero
 
 /**
@@ -50,7 +102,7 @@ class Cell {
      * 
      * @returns true si se ha establecido el valor de la celda, false de lo contrario.
      */
-    isValid() {
+    isValid = () => {
         if (this.value !== null) {
             return true;
         }
@@ -63,7 +115,7 @@ class Cell {
      * 
      * @returns El valor nímimo que puede tener una celda.
      */
-    static getMinValue() {
+    static getMinValue = () => {
         return Cell.#MIN_VALUE;
     }
 
@@ -72,7 +124,7 @@ class Cell {
      * 
      * @returns El valor máximo que puede terner una celda.
      */
-    static getMaxValue() {
+    static getMaxValue = () => {
         return Cell.#MAX_VALUE;
     }
 }
@@ -136,10 +188,15 @@ class Board {
             this._cells[i] = new Array(Board.#NUM_COLS);
         }
 
+        // Hacerlo, por lo menos, una vez:
         do {
+            // Llenar la grilla con ceros (0's)
             this.resetBoard();
+            // Llenar la grilla con números válidos.
             this.fillGrid();
-        } while(!Board.isValidGrid(this._grid));
+        } while(!Board.isValidGrid(this._grid));    // Hasta que la grilla sea válida.
+
+        console.table(this._grid);
     }
 
 
@@ -189,6 +246,9 @@ class Board {
     }
 
 
+    /**
+     * Convierte todos los números de la grilla en ceros (0's)
+     */
     resetBoard = () => {
         this._grid = [
             [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -212,33 +272,51 @@ class Board {
      * @returns true si la grilla pudo ser llenada con valores de Sudoku, false de lo contrario.
      */
     fillGrid = () => {
+        // Inicializar las variables con las que se trabajará la grilla.
         let intRow = 0;
         let intCol = 0;
         let validValue = 0;
+        // Un arreglo desordenado de números válidos.
         let shuffledNumbers = Board.shuffleArray(Board.getValidNumbers());
 
+        // Para las 81 celdas de una grilla ...
         for (let i = 0; i < 81; i++) {
+            // El índice de la fila según el número de celda: 0 -> 8 = 0, 9 -> 17 = 1, ..., 72 -> 80 = 8
             intRow = Math.floor(i / 9);
+            // El índice de la columna según el número de la celda: 0 = 0, 1 = 1, 2 = 2, ..., 80 = 8
             intCol = i % 9;
 
+            // El arreglo de números de la grilla en la fila correspondiente a la celda en turno.
             let rowArray = this._grid[intRow];
 
+            // El arreglo de números de la grilla en la columna correspondiente a la celda en turno.
             let colArray = this._grid.map(row => row[intCol]);
 
+            // El arreglo de números en el cuadro donde se encuentra la celda en turno.
             let squareArray = Board.getSquareArray(this._grid, intRow, intCol);
 
+            // Busca un número válido en el arreglo desordenado de números válidos:
             validValue = shuffledNumbers.find((item, index) => {
+                // Si hay algún número en el arreglo desordenado que no esté en ninguno de los arreglos (fila, columna, cuadro) ...
                 if (rowArray.indexOf(item) === -1 && colArray.indexOf(item) === -1 && squareArray.indexOf(item) === -1) {
+                    // Elimina ese número del arreglo desordenado de números válidos y lo devuelve (para guardarlo en validValue)
                     return shuffledNumbers.splice(index, 1)[0];
                 }
             });
 
+            // Si no encuentra un número válido ...
             if (!validValue) {
+                // ... asignar cero (0) a esa celda y ...
                 this._grid[intRow][intCol] = 0;
+                // ... darse por vencido
                 break;
             } else {
+                // De lo contrario asigna el valor válido a esa celda.
                 this._grid[intRow][intCol] = validValue;
+
+                // Si el arreglo desordenado de números válidos se quedó vacío ...
                 if (shuffledNumbers.length === 0) {
+                    // ... volver a llenarlo con otro arreglo desordenado de números válidos.
                     shuffledNumbers = Board.shuffleArray(Board.getValidNumbers());
                 }
             }
@@ -250,7 +328,7 @@ class Board {
      * 
      * @returns Una cadena de caracteres que indica el nivel de dificultad del tablero.
      */
-    toString() {
+    toString = () => {
         return `Tablero de Sudoku. Nivel de dificultad: ${Board.getLevelName(this.level)}.`;
     }
 
@@ -269,82 +347,15 @@ class Board {
 
         // Si pasa las dos validaciones anteriores, llena el arreglo final.
         if (allIsValid) {
-            switch (row) {
-                case 0: case 1: case 2:
-                    switch (col) {
-                        case 0: case 1: case 2:
-                            for (let i = 0; i < 3; i++) {
-                                for (let j = 0; j < 3; j++) {
-                                    squareArray.push(grid[i][j]);
-                                }
-                            }
-                            break;
-                        case 3: case 4: case 5:
-                            for (let i = 0; i < 3; i++) {
-                                for (let j = 3; j < 6; j++) {
-                                    squareArray.push(grid[i][j]);
-                                }
-                            }
-                            break;
-                        default:
-                            for (let i = 0; i < 3; i++) {
-                                for (let j = 6; j < 9; j++) {
-                                    squareArray.push(grid[i][j]);
-                                }
-                            }
-                            break;
-                    }
-                    break;
-                case 3: case 4: case 5:
-                    switch (col) {
-                        case 0: case 1: case 2:
-                            for (let i = 3; i < 6; i++) {
-                                for (let j = 0; j < 3; j++) {
-                                    squareArray.push(grid[i][j]);
-                                }
-                            }
-                            break;
-                        case 3: case 4: case 5:
-                            for (let i = 3; i < 6; i++) {
-                                for (let j = 3; j < 6; j++) {
-                                    squareArray.push(grid[i][j]);
-                                }
-                            }
-                            break;
-                        default:
-                            for (let i = 3; i < 6; i++) {
-                                for (let j = 6; j < 9; j++) {
-                                    squareArray.push(grid[i][j]);
-                                }
-                            }
-                            break;
-                    }
-                    break;
-                default:
-                    switch (col) {
-                        case 0: case 1: case 2:
-                            for (let i = 6; i < 9; i++) {
-                                for (let j = 0; j < 3; j++) {
-                                    squareArray.push(grid[i][j]);
-                                }
-                            }
-                            break;
-                        case 3: case 4: case 5:
-                            for (let i = 6; i < 9; i++) {
-                                for (let j = 3; j < 6; j++) {
-                                    squareArray.push(grid[i][j]);
-                                }
-                            }
-                            break;
-                        default:
-                            for (let i = 6; i < 9; i++) {
-                                for (let j = 6; j < 9; j++) {
-                                    squareArray.push(grid[i][j]);
-                                }
-                            }
-                            break;
-                    }
-                    break;
+            let rowStart = 3 * Math.floor(row / 3);   // 0, 1, 2 = 0; 3, 4, 5 = 3; 6, 7, 8 = 6
+            let rowEnd = rowStart + 3           // 0, 1, 2 = 0 + 3 (3); 3, 4, 5 = 3 + 3 (6); 6, 7, 8 = 6 + 3 (9)
+            let colStart = 3 * Math.floor(col / 3);   // 0, 1, 2 = 0; 3, 4, 5 = 3; 6, 7, 8 = 6
+            let colEnd = colStart + 3           // 0, 1, 2 = 0 + 3 (3); 3, 4, 5 = 3 + 3 (6); 6, 7, 8 = 6 + 3 (9)
+
+            for (let rowIndex = rowStart; rowIndex < rowEnd; rowIndex++) {
+                for (let colIndex = colStart; colIndex < colEnd; colIndex++) {
+                    squareArray.push(grid[rowIndex][colIndex]);
+                }
             }
         }
 
@@ -462,6 +473,3 @@ class Board {
     }
 }
 
-window.addEventListener('load', event => {
-    let board = new Board();
-});
