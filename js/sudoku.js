@@ -138,11 +138,8 @@ class Board {
 
         do {
             this.resetBoard();
-            let shuffledNumbers = Board.shuffleArray(Board.getValidNumbers());
-            this.populateBoard(this._grid, shuffledNumbers);
+            this.fillGrid();
         } while(!Board.isValidGrid(this._grid));
-
-        console.debug(this._grid);
     }
 
 
@@ -214,7 +211,7 @@ class Board {
      * @param {Array} shuffledNumbers Un arreglo de números válidos desordenado.
      * @returns true si la grilla pudo ser llenada con valores de Sudoku, false de lo contrario.
      */
-    populateBoard = () => {
+    fillGrid = () => {
         let intRow = 0;
         let intCol = 0;
         let validValue = 0;
