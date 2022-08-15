@@ -1,0 +1,185 @@
+/*******************************************************************************
+ *
+ * Imports:
+ *
+ * - Fuente sin patines: Poppins (Google Fonts)
+ * - Fuente con patines: Source Serif Pro (Google Fonts)
+ * - Fuente monoespaciada: Cousine (Google Fonts)
+ *
+ ******************************************************************************/
+
+ @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,200;0,400;0,600;1,200;1,400;1,600&display=swap');
+ @import url('https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,200;0,400;0,700;1,200;1,400;1,700&display=swap');
+ @import url('https://fonts.googleapis.com/css2?family=Cousine:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+
+/*******************************************************************************
+ *
+ * Características y variables globales:
+ * 
+ * - Fuentes estándar:
+ *   - Sin patines: 'Poppins';
+ *   - Con patines: 'Source Serif Pro';
+ *   - Monoespaciadas: 'Cousine';
+ * - Colores:
+ *   - Blanco: #f5f5f5;
+ *   - Negro: #1b1b1b;
+ *   - Primer plano: #f7d3aa;
+ *   - Segundo plano: #3a363d;
+ *   - Bordes: #9dcb8b;
+ *   - Nota:
+ * 
+ ******************************************************************************/
+
+ :root {
+    /* Fuentes */
+    --sans-serif-font: 'Poppins';
+    --serif-font: 'Source Serif Pro';
+    --monospaced-font: 'Cousine';
+
+    /* Colores */
+    --color-white: #f5f5f5;
+    --color-black: #1b1b1b;
+    --color-fg: #f7d3aa;
+    --color-bg: #3a363d;
+    --color-border: #9dcb8b;
+    --color-partner-fg: #4c3a51;
+    --color-partner-bg: #fcf8e8;
+    --color-highligh-fg: #00ff00;
+    --color-highlight-bg: #1b1b1b;
+    --color-highlight-border: #9dcb8b;
+    --color-note: #00ff00;
+ }
+
+
+/*******************************************************************************
+ *
+ * Resets:
+ *
+ * - Márgenes exteriores: 0
+ * - Márgenes interiores: 0
+ * - Dimensiones de ancho y alto incluyen ancho de borde
+ * - Listas desordenadas: sin viñetas y dispuestas en formato flex (eje principal 
+ *   horizonal, salto de línea automático)
+ * - Ligas: sin subrayado.
+ *
+ ******************************************************************************/
+
+ * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    color: var(--color-fg);
+    background-color: var(--color-bg);
+    font-family: var(--sans-serif-font), sans-serif;
+}
+
+ul {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+a {
+    text-decoration: none;
+}
+
+
+/*******************************************************************************
+ *
+ * Spans y estilos temporales
+ *
+ ******************************************************************************/
+
+/* Google Material Symbols */
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 300,
+  'GRAD' 0,
+  'opsz' 20;
+}
+
+/* Elementos ocultos */
+.hidden {
+    display: none;
+}
+
+/*******************************************************************************
+ *
+ * Estilos (Mobile First)
+ *
+ ******************************************************************************/
+
+ /* Contenedor general */
+.container {
+    margin: 0 1rem;
+}
+
+
+/* Encabezado */
+#header {
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* Contenedor de logotipo y nombre de marca / título principal */
+#brand {
+    display: flex;
+    align-items: baseline;
+    column-gap: 1rem;
+}
+
+
+/* Barra de navegación */
+#nav {
+    display: flex;
+    justify-content: flex-end;
+}
+
+
+/* Menú principal */
+#main-menu {
+    display: flex;
+}
+
+
+/* Elemento de menú principal */
+.main-menu-item {
+    margin: 0.5rem 0.75rem;
+    padding: 0.5rem;
+}
+
+/* Contenedor del tablero de sudoku */
+#sudoku-board-container {
+    width: 300px;
+    height: 300px;
+    margin: 1rem auto;
+}
+
+/* Tablero de Sudoku */
+#sudoku-board-container #sudoku-board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    border: solid 4px var(--color-border);
+}
+
+/* Cada cuadro dentro del tablero de sudoku. */
+#sudoku-board-container #sudoku-board .square {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    border: solid 1px var(--color-border);
+}
+
+/* Cada celda dentro del cuadro del tablero de sudoku. */
+#sudoku-board-container #sudoku-board .square .cell {
+    border: solid 0.5px var(--color-border);
+}
+
+/* Elemento de texto que guarda el valor de cada celda. */
+#sudoku-board-container #sudoku-board .square .cell .cell-text {
+    text-align: center;
+}
