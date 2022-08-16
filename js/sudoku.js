@@ -121,8 +121,10 @@ class Board {
             this.#fillGrid();
         } while(!Board.isValidGrid(this._grid));    // Hasta que la grilla sea válida.
 
-        // Copia la grilla creada en una solución que servirá después para comparar.
-        this._solution = this.grid;
+        this._playerGrid = Board.getEmptyGrid();
+
+        // Genera la grilla 'jugable' para el jugador.
+        this._playerGrid = this.#getPlayerGrid();
     }
 
 
@@ -277,8 +279,8 @@ class Board {
                 cellValue.id = `value-${9 * i + j}`;
                 cellValue.classList.add('cell-value', 'hidden');
 
-                if (this._grid[i][j] !== 0) {
-                    cellValue.textContent = `${this._grid[i][j]}`;
+                if (this._playerGrid[i][j] !== 0) {
+                    cellValue.textContent = `${this._playerGrid[i][j]}`;
                     cellValue.classList.toggle('hidden');
                 }
 
@@ -353,6 +355,105 @@ class Board {
                 this._grid[intRow][intCol] = validValue;
             }
         }
+    }
+
+
+    /**
+     * 'Borra', convirtiendo a ceros (0's), algunos valores de la grilla original
+     * para que el jugador pueda resolver la grilla 'incompleta'.
+     * 
+     * @returns Una copia de la grilla original con algunos elementos removidos.
+     */
+     #getPlayerGrid = () => {
+        // Lista de las celdas 'visitadas' para borrar.
+        const visitedCellArray = [];
+
+        // Número aleatorio de celdas a borrar en cada cuadro.
+        let randomCellDeleteAmount = 0;
+
+        // Clona la grilla original para tener la solución como referencia y 
+        // trabajar sobre el clon.
+        const playerGrid = this._grid.slice().map(row => row.slice());
+
+        // Constantes donde se guardarán los límites de celdas 'vacías' por cuadro,
+        // fila y columna.
+        const {minSquareEmptyCells, maxSquareEmptyCells, maxRowEmptyCells, maxColEmptyCells} = Board.getLevelSpecs(this.level);
+
+        // Para cada cuadro del tablero de Sudoku ...
+        for (let squareIndex = 0; squareIndex < 9; squareIndex++) {
+            // ... calcular un número aleatorio de celdas a borrar.
+            randomCellDeleteAmount = Board.getRandomInteger(minSquareEmptyCells, maxSquareEmptyCells);
+
+            // Llevar un conteo de las celdas borradas en cada cuadro.
+            for (let randomCellCount = 0; randomCellCount < randomCellDeleteAmount; randomCellCount++) {
+                // Variable donde se guardará el índice de la fila donde se encuentra la celda
+                // que se va a borrar.
+                let randomRowIndex = -1;
+
+                // Variable donde se guardará el índice de la columna donde se encuentra la 
+                // celda que se va a borrar.
+                let randomColIndex = -1;
+
+                // El índice absoluto (0..80) de la celda que se va a borrar. Únicamente sirve 
+                // para verificar que no se elija dos veces (el proceso de elección es aleatorio
+                // y podría ocurrir que en dos pasadas diferentes salga la misma celda).
+                let deleteCellIndex = -1;
+
+                // Variable donde se guardará el número de celdas 'vacías' en una fila.
+                let emptyCellsInRow = -1;
+
+                // Variable donde se guardará el número de celdas 'vacías' en una columna.
+                let emptyCellsInCol = -1;
+
+                // Hacer este proceso, por lo menos una vez:
+                do {
+                    // Calcular aleatoriamente el índice de la fila donde se encuentra la celda
+                    // que se va a borrar (respecto del cuadro actual).
+                    randomRowIndex = Board.getRandomInteger(0, 2) + 3 * Math.floor(squareIndex / 3);
+
+                    // Calcular aleatoriamente el índice de la columna donde se encuentra la 
+                    // celda que se va a borrar (respecto del cuadro actual).
+                    randomColIndex = Board.getRandomInteger(0, 2) + 3 * (squareIndex % 3);
+
+                    // Calcular el índice absoluto de la celda (0..80) dentro de la grilla de
+                    // Sudoku, para verificar que no se haya calculado la misma anteriormente.
+                    deleteCellIndex = 9 * randomRowIndex + randomColIndex;
+
+                    // Y repetir, si es necesario, cuando el índice de la celda ya se encuentra en 
+                    // la lista de celdas visitadas.
+
+                    // Extraer la fila completa de la grilla de trabajo
+                    const rowArray = playerGrid[randomRowIndex];
+
+                    // Contar el número de celdas 'vacías' en la fila
+                    emptyCellsInRow = rowArray.reduce(item => {item === 0}, 0);
+
+                    // Extraer la columna completa de la grilla de trabajo
+                    const colArray = playerGrid.map(row => row[randomColIndex]);
+
+                    // Contar el número de celdas 'vacías' en la columna
+                    emptyCellsInCol = colArray.reduce(item => {item === 0}, 0);
+
+                    // Repetir si:
+                    // 1. Ya se había elegido esa celda anteriormente.
+                } while(visitedCellArray.some(item => item === deleteCellIndex) || 
+                    // 2. El número de celdas 'vacías' en la fila ya llegó al máximo del nivel, o
+                    emptyCellsInRow >= maxRowEmptyCells || 
+                    // 3. El número de celdas 'vacías' en la columna ya llegó al máximo del nivel.
+                    emptyCellsInCol >= maxColEmptyCells);
+
+                // Si llega a este punto, es porque la celda no ha sido visitada antes, por lo
+                // tanto se guarda el índice absoluto en la lista para futuras verificaciones.
+                visitedCellArray.push(deleteCellIndex);
+
+                // Si se llega a este punto, es porque no se ha llegado al límite máximo de 
+                // celdas 'borradas' en la fila o columna, según el nivel, por lo que se 'borra' 
+                // esa celda de la grilla de trabajo.
+                playerGrid[randomRowIndex][randomColIndex] = 0;
+            }
+        }
+
+        return playerGrid;
     }
 
 
@@ -741,32 +842,12 @@ class Board {
     static getRandomInteger(min, max, inclusive = true) {
         return Math.floor(Math.random() * ((inclusive ? 1 : 0) + max - min)) + min;
     }
-
-
-    static getPlayGrid(grid, level) {
-        const levelSpecs = Board.getLevelSpecs(level);
-        /*
-        'minSquareEmptyCells': 0,   // Número mínimo de celdas vacías en un Cuadro (3 x 3 celdas)
-        'maxSquareEmptyCells': 4,   // Número máximo de celdas vacías en un Cuadro (3 x 3 celdas)
-        'minRowEmptyCells': 0,      // Número mínimo de celdas vacías en una Fila (9 x 1 celdas - horizontal)
-        'maxRowEmptyCells': 5,      // Número máximo de celdas vacías en una Fila (9 x 1 celdas - horizontal)
-        'minColEmptyCells': 0,      // Número mínimo de celdas vacías en una Columna (1 x 9 celdas - vertical)
-        'maxColEmptyCells': 5,      // Número máximo de celdas vacías en una Columna (1 x 9 celdas - vertical)
-        */
-        for (let squareIndex = 0; squareIndex < 9; squareIndex++) {
-            const squareArray = Board.getSquareArrayByIndex(grid, squareIndex);
-            const squareEmptyCells = Board.getRandomInteger(levelSpecs.minSquareEmptyCells, levelSpecs.maxSquareEmptyCells);
-            const rowEmptyCells = Board.getRandomInteger(levelSpecs.minRowEmptyCells, levelSpecs.maxRowEmptyCells);
-            const colEmptyCells = Board.getRandomInteger(levelSpecs.minColEmptyCells, levelSpecs.maxColEmptyCells);
-
-            // TODO: Implement.
-        }
-    }
 }
 
 
+// La lógica del juego en el navegador.
 const sudokuBoardContainer = document.getElementById('sudoku-board-container');
 
-const board = Board.getBoard();
+const board = Board.getBoard('medium');
 
 board.draw(sudokuBoardContainer);
