@@ -1,10 +1,10 @@
 # Web Browser Sudoku
 
-El juego de **Sudoku** es muy simple. El objetivo es llenar una cuadrícula de 9
-filas y 9 columnas, dividida en 9 submatrices, cada una de tres (3) filas y tres
-(3) columnas, con números del uno (1) al nueve (9), en ningún orden particular, sin
-que estos se repitan en una misma fila, en una misma columna, ni en la submatriz en
-la que se encuentra cada celda.
+El juego de **Sudoku** es muy simple. El objetivo es llenar una cuadrícula de nueve (9)
+**filas** × nueve (9) **columnas**, dividida en nueve (9) **submatrices**, cada una de
+tres (3) **filas** × tres (3) **columnas**, con números del uno (1) al nueve (9), en
+ningún orden particular, sin que estos se repitan en una misma **fila**, en una misma
+**columna**, ni en la **submatriz** en la que se encuentra cada **celda**.
 
 ## Objetivo del juego
 
@@ -12,11 +12,11 @@ El objetivo del juego de **Sudoku** es resolver satisfactoriamente un **tablero*
 parcialmente lleno.
 
 El juego inicia con un **tablero** parcialmente lleno, es tarea del jugador llenarlo por
-completo con los números que hacen falta, en las **celdas** vacías, siguiendo las siguientes
-siete reglas:
+completo con los números, del uno (1) al nueve (9), que hacen falta en las **celdas** vacías,
+siguiendo las siguientes siete reglas:
 
-1. El **tablero** de **Sudoku** se compone por una matriz de nueve (9) **filas** x nueve
-(9) **columnas**, subdividido en nueve (9) **submatrices**, cada una de tres (3) **filas** x
+1. El **tablero** de **Sudoku** se compone por una matriz de nueve (9) **filas** × nueve
+(9) **columnas**, subdividido en nueve (9) **submatrices**, cada una de tres (3) **filas** ×
 tres (3) **columnas**.
 2. Al cruce de una **fila** y una **columna** se le llama **celda**. El **tablero** tiene
 un total de ochenta y un **celdas**.
