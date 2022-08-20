@@ -8,9 +8,12 @@ la que se encuentra cada celda.
 
 ## Objetivo del juego
 
-Generalmente, el juego inicia con una cuadrícula parcialmente llena, es tarea del
-jugador llenarla por completo con los números que hacen falta, siguiendo siempre
-las siguientes siete reglas:
+El objetivo del juego de **Sudoku** es resolver satisfactoriamente un **tablero**
+parcialmente lleno.
+
+El juego inicia con un **tablero** parcialmente lleno, es tarea del jugador llenarlo por
+completo con los números que hacen falta, en las **celdas** vacías, siguiendo las siguientes
+siete reglas:
 
 1. El **tablero** de **Sudoku** se compone por una matriz de nueve (9) **filas** x nueve
 (9) **columnas**, subdividido en nueve (9) **submatrices**, cada una de tres (3) **filas** x
@@ -25,7 +28,8 @@ un total de ochenta y un **celdas**.
 (9), sin ningún orden específico.
 6. Considerando lo anterior, ninguna **celda** queda vacía, ningún número se repite en
 cada **fila**, **columna** o **submatriz** del **tablero**.
-7. Cada **tablero** tiene una, y sólo una, posible **solución**.
+7. No se pueden mover, o cambiar las posición, los números colocados inicialmente en
+el **tablero**.
 
 Cuando el jugador ha llenado todas las **celdas** del tablero, y todas cumplen con las reglas
 anteriores, se puede decir que el **tablero** ha sido resuelto satisfactoriamente.
