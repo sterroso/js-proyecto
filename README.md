@@ -31,12 +31,12 @@ cada **fila**, **columna** o **submatriz** del **tablero**.
 7. No se pueden mover, o cambiar las posición, los números colocados inicialmente en
 el **tablero**.
 
-Cuando el jugador ha llenado todas las **celdas** del tablero, y todas cumplen con las reglas
-anteriores, se puede decir que el **tablero** ha sido resuelto satisfactoriamente.
+Cuando el jugador ha llenado todas las **celdas** vacías del tablero, y todas cumplen con
+las reglas anteriores, se puede decir que el **tablero** ha sido resuelto satisfactoriamente.
 
 ## El Tablero de Sudoku
 
-Un tablero, correctamente lleno, debe verse como el siguiente:
+Un **tablero**, correctamente lleno, debe verse como el siguiente:
 
 |     |  1  |  2  |  3  |  4  |  5  |  6  |  7  |  8  |  9  |
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
@@ -50,51 +50,57 @@ Un tablero, correctamente lleno, debe verse como el siguiente:
 |**H**|  3  |  7  |  2  |  5  |  9  |  4  |  8  |  6  |  1  |
 |**I**|  1  |  4  |  8  |  3  |  6  |  2  |  9  |  5  |  7  |
 
- Todos los números, del uno (1) al nueve (9), sin repetirse en fila, columna o submatriz.
+ Todos los números, del uno (1) al nueve (9), sin repetirse en **fila**, **columna** o
+ **submatriz**. Ninguna **celda** vacía.
 
 ## Objetivo del proyecto
 
-El objetivo principal del proyecto es generar un tablero de Sudoku con algunos espacios
-vacíos para que el usuario pueda jugar tratando de rellenarlos cumpliendo las reglas
-del juego de Sudoku. Para ello, el resultado final deberá:
+El objetivo principal del proyecto es generar un **tablero** de **Sudoku** con algunas
+**celdas** vacías para que el usuario pueda jugar tratando de rellenarlas con los números
+del uno (1) al nueve (9), cumpliendo las reglas del juego de **Sudoku**. Para ello, el
+código final del proyecto deberá ser capaz de:
 
-1. Generar un tablero de **Sudoku** completamente lleno (la respuesta correcta),
+1. Generar un **tablero** de **Sudoku** completamente lleno (la **respuesta correcta**),
 2. Permitir al usuario elegir entre tres niveles de dificultad: *fácil*, *medio* y
 *difícil*, en orden creciente de dificultad.
 3. Dependiendo del nivel de dificultad elegido por el usuario, generar un segundo
-tablero (el tablero de juego) borrando algunos números en celdas ubicadas
+**tablero** (el **tablero de juego**) borrando algunos números en **celdas** ubicadas
 aleatoriamente para que el usuario las intente rellenar con las respuestas correctas,
-4. Dibujar correctamente el tablero de juego en la página.
-5. Permitir la interacción del usuario haciendo clic en las celdas vacías para que
-introduzca el número que desee (del 1 al 9),
+4. Dibujar correctamente el **tablero de juego** en la página.
+5. Permitir la interacción del usuario haciendo clic en las **celdas** vacías para que
+introduzca el número que desee, del uno (1) al nueve (9),
 6. Permitir al usuario pausar el juego, guardándolo para continuar después.
 7. Permitir al usuario cargar un juego guardado para continuar resolviéndolo.
-8. Una vez completamente lleno el tablero, permitirle al usuario validar sus respuestas.
-9. Si el tablero de juego es igual a la respuesta correcta, guardar la estadística del
-usuario, incluyendo nivel de dificultad, fecha de inicio, fecha de terminación y tiempo
+8. Una vez que el jugador ha llenado completamente el **tablero**, el juego deberá
+permitirle al usuario validar sus respuestas.
+9. Si el **tablero de juego** es igual a la **respuesta correcta**, guardar la estadística
+del usuario, incluyendo nivel de dificultad, fecha de inicio, fecha de terminación y tiempo
 total de juego (minutos, segundos y décimas de segundo).
 
 ## Alcances mínimos del proyecto (MVP)
 
 El código debe ser capaz de:
 
-1. Generar un tablero completamente lleno, considerando las reglas del **Sudoku**.
-2. Dejar algunos espacios en blanco con suficientes pistas para que el jugador
-pueda llenarlos, de acuerdo con las reglas del **Sudoku**, y llegar al mismo
-tablero generado en el paso 1.
-3. Dibujar correctamente el tablero en el navegador.
-4. Permitir la interacción con el usuario: elegir las celdas vacías y permitir
-que introduzca números del 1 al 9.
-5. Validar las respuestas del jugador contra el tablero generado en el paso 1.
+1. Generar un **tablero** de **Sudoku** completamente lleno, considerando las reglas antes
+descritas.
+2. Dejar algunas **celdas** en blanco con suficientes pistas para que el jugador
+pueda llenarloa, de acuerdo con las reglas del **Sudoku**, y llegar al mismo
+**tablero** generado en el paso 1. A este segundo **tablero** se le conocerá como el
+**tablero de juego**.
+3. Dibujar correctamente el **tablero de juego** en el navegador.
+4. Permitir la interacción del usuario con el **tablero de juego**: elegir las **celdas**
+vacías y permitir al usuario que introduzca números del uno (1) al nueve (9).
+5. Validar los números introducidos por el jugador, contra el **tablero** generado en el
+paso 1, e indicarle si sus respuestas son correctas o hay errores.
 
 ## Características adicionales deseables
 
 Además, sería ideal que la interfaz sea capaz de permitir, al jugador, contar con
-algunas pistas visuales que le permita visualizar con mayor facilidad la fila,
-columna y submatriz en la que se encuentra, hacer anotaciones de los números
-"candidatos" que pueden colocarse en las celdas vacías, guardar el juego para
-continuarlo en otro momento, elegir entre varios niveles de dificultad, tomar
-el tiempo que le lleva resolver un tablero y llevar registro de sus estadísticas
+algunas pistas visuales que le permita visualizar con mayor facilidad la **fila**,
+**columna** y **submatriz** en la que se encuentra, hacer anotaciones de los números
+"*candidatos*" que pueden colocarse en las **celdas** vacías, guardar el juego para
+continuarlo en otro momento, elegir entre diferentes niveles de dificultad, tomar
+el tiempo que le lleva resolver un **tablero** y llevar registro de sus estadísticas
 por nivel de dificultad y tiempo para resolverlo.
 
 ## Autor
