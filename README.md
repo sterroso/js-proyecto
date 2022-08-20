@@ -66,16 +66,24 @@ creciente de dificultad.
 3. Dependiendo del nivel de dificultad elegido por el usuario, generar un segundo
 **tablero** (el **tablero de juego**) borrando algunos números en **celdas** ubicadas
 aleatoriamente para que el usuario las intente rellenar con las respuestas correctas,
-4. Dibujar correctamente el **tablero de juego** en la página.
+4. Dibujar correctamente el **tablero de juego**, generado en el paso 3, en la página.
 5. Permitir la interacción del usuario haciendo clic en las **celdas** vacías para que
 introduzca el número que desee, del uno (1) al nueve (9),
 6. Permitir al usuario pausar el juego, guardándolo para continuar después.
 7. Permitir al usuario cargar un juego guardado para continuar resolviéndolo.
 8. Una vez que el jugador ha llenado completamente el **tablero**, el juego deberá
 permitirle al usuario validar sus respuestas.
-9. Si el **tablero de juego** es igual a la **respuesta correcta**, guardar la estadística
-del usuario, incluyendo nivel de dificultad, fecha de inicio, fecha de terminación y tiempo
-total de juego (minutos, segundos y décimas de segundo).
+9. Si el **tablero de juego**, generado en el paso 3, es igual a la **respuesta correcta**,
+generada en el paso 1, debe ser capaz de guardar la estadística de jueg del usuario, incluyendo
+nivel de dificultad, fecha de inicio, fecha de terminación y tiempo total efectivo de juego
+(horas, minutos, segundos y décimas de segundo, sin contar el tiempo en pausa o suspensión).
+10. El evento que provoca el inicio del reloj de tiempo de juego debe ser disparado por
+la interacción (clic) del jugador con un botón de arranque.
+11. Los eventos que desencadenan el paro del reloj de tiempo de juego, pueden ser disparados
+por cualquiera de los siguientes sucesos:
+    - La interacción del jugador con un botón de pausa.
+    - La pérdida de foco de la ventana en que se ejecuta el juego.
+    - El cierre del navegador y/o la ventana en que se ejecuta el juego.
 
 ## Alcances mínimos del proyecto (MVP)
 
