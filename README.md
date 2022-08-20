@@ -61,8 +61,8 @@ del uno (1) al nueve (9), cumpliendo las reglas del juego de **Sudoku**. Para el
 código final del proyecto deberá ser capaz de:
 
 1. Generar un **tablero** de **Sudoku** completamente lleno (la **respuesta correcta**),
-2. Permitir al usuario elegir entre tres niveles de dificultad: *fácil*, *medio* y
-*difícil*, en orden creciente de dificultad.
+2. Permitir al usuario elegir entre tres niveles: *fácil*, *medio* y *difícil*, en orden
+creciente de dificultad.
 3. Dependiendo del nivel de dificultad elegido por el usuario, generar un segundo
 **tablero** (el **tablero de juego**) borrando algunos números en **celdas** ubicadas
 aleatoriamente para que el usuario las intente rellenar con las respuestas correctas,
