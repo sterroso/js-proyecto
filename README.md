@@ -6,6 +6,8 @@ filas y 9 columnas, dividida en 9 submatrices, cada una de tres (3) filas y tres
 que estos se repitan en una misma fila, en una misma columna, ni en la submatriz en
 la que se encuentra cada celda.
 
+## Objetivo del juego
+
 Generalmente, el juego inicia con una cuadrícula parcialmente llena, es tarea del
 jugador llenarla por completo con los números que hacen falta, siguiendo siempre
 las siguientes siete reglas:
@@ -24,6 +26,9 @@ un total de ochenta y un **celdas**.
 6. Considerando lo anterior, ninguna **celda** queda vacía, ningún número se repite en
 cada **fila**, **columna** o **submatriz** del **tablero**.
 7. Cada **tablero** tiene una, y sólo una, posible **solución**.
+
+Cuando el jugador ha llenado todas las **celdas** del tablero, y todas cumplen con las reglas
+anteriores, se puede decir que el **tablero** ha sido resuelto satisfactoriamente.
 
 ## El Tablero de Sudoku
 
