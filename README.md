@@ -84,9 +84,9 @@ por cualquiera de los siguientes sucesos:
     - La interacción del jugador con un botón de pausa.
     - La pérdida de foco de la ventana en que se ejecuta el juego.
     - El cierre del navegador y/o la ventana en que se ejecuta el juego.
-12. Una vez qie el reloj de tiempo de juego ha sido parado, es necesario que el jugador
-reinicie el juego explícitamente haga clic en el botón de arranque para reanudar el juego
-y el reloj de tiempo de juego.
+12. Una vez que el reloj de tiempo de juego ha sido parado, es necesario que el jugador
+reinicie el juego explícitamente haciendo clic en el botón de arranque para reanudar el
+juego y el reloj de tiempo de juego.
 13. Mientras el reloj de tiempo de juego se encuentra detenido, el **tablero de juego** debe
 mantenerse oculto al jugador para evitar que éste lo copie en otro medio e intente resolverlo
 de manera paralela mientras el reloj de juego se encuentra detenido.
