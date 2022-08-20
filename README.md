@@ -6,6 +6,25 @@ filas y 9 columnas, dividida en 9 submatrices, cada una de tres (3) filas y tres
 que estos se repitan en una misma fila, en una misma columna, ni en la submatriz en
 la que se encuentra cada celda.
 
+Generalmente, el juego inicia con una cuadrícula parcialmente llena, es tarea del
+jugador llenarla por completo con los números que hacen falta, siguiendo siempre
+las siguientes siete reglas:
+
+1. El **tablero** de **Sudoku** se compone por una matriz de nueve (9) **filas** x nueve
+(9) **columnas**, subdividido en nueve (9) **submatrices**, cada una de tres (3) **filas** x
+tres (3) **columnas**.
+2. Al cruce de una **fila** y una **columna** se le llama **celda**. El **tablero** tiene
+un total de ochenta y un **celdas**.
+3. En cada **fila** del **tablero** deben ir **todos** los números del uno (1) al nueve
+(9), sin ningún orden específico.
+4. En cada **columna** del **tablero** deben ir **todos** los números del uno (1) al nueve
+(9), sin ningún orden específico.
+5. En cada **sumbatriz** del **tablero** deben ir **todos** los números de uno (1) al nueve
+(9), sin ningún orden específico.
+6. Considerando lo anterior, ninguna **celda** queda vacía, ningún número se repite en
+cada **fila**, **columna** o **submatriz** del **tablero**.
+7. Cada **tablero** tiene una, y sólo una, posible **solución**.
+
 ## El Tablero de Sudoku
 
 Un tablero, correctamente lleno, debe verse como el siguiente:
@@ -24,14 +43,29 @@ Un tablero, correctamente lleno, debe verse como el siguiente:
 
  Todos los números, del uno (1) al nueve (9), sin repetirse en fila, columna o submatriz.
 
-## Objetivo del juego
+## Objetivo del proyecto
 
-Una vez que el tablero se encuentra completamente lleno, se borran algunos números
-en unicaciones aleatorias, dejando suficientes pistas para que el jugador pueda
-resolver el tablero rellenando los espacios en blanco, considerando las reglas antes
-mencionadas.
+El objetivo principal del proyecto es generar un tablero de Sudoku con algunos espacios
+vacíos para que el usuario pueda jugar tratando de rellenarlos cumpliendo las reglas
+del juego de Sudoku. Para ello, el resultado final deberá:
 
-## Alcances del proyecto
+1. Generar un tablero de **Sudoku** completamente lleno (la respuesta correcta),
+2. Permitir al usuario elegir entre tres niveles de dificultad: *fácil*, *medio* y
+*difícil*, en orden creciente de dificultad.
+3. Dependiendo del nivel de dificultad elegido por el usuario, generar un segundo
+tablero (el tablero de juego) borrando algunos números en celdas ubicadas
+aleatoriamente para que el usuario las intente rellenar con las respuestas correctas,
+4. Dibujar correctamente el tablero de juego en la página.
+5. Permitir la interacción del usuario haciendo clic en las celdas vacías para que
+introduzca el número que desee (del 1 al 9),
+6. Permitir al usuario pausar el juego, guardándolo para continuar después.
+7. Permitir al usuario cargar un juego guardado para continuar resolviéndolo.
+8. Una vez completamente lleno el tablero, permitirle al usuario validar sus respuestas.
+9. Si el tablero de juego es igual a la respuesta correcta, guardar la estadística del
+usuario, incluyendo nivel de dificultad, fecha de inicio, fecha de terminación y tiempo
+total de juego (minutos, segundos y décimas de segundo).
+
+## Alcances mínimos del proyecto (MVP)
 
 El código debe ser capaz de:
 
@@ -39,9 +73,12 @@ El código debe ser capaz de:
 2. Dejar algunos espacios en blanco con suficientes pistas para que el jugador
 pueda llenarlos, de acuerdo con las reglas del **Sudoku**, y llegar al mismo
 tablero generado en el paso 1.
-3. Validar las respuestas del jugador contra el tablero generado en el paso 1.
+3. Dibujar correctamente el tablero en el navegador.
+4. Permitir la interacción con el usuario: elegir las celdas vacías y permitir
+que introduzca números del 1 al 9.
+5. Validar las respuestas del jugador contra el tablero generado en el paso 1.
 
-## Características adicionales
+## Características adicionales deseables
 
 Además, sería ideal que la interfaz sea capaz de permitir, al jugador, contar con
 algunas pistas visuales que le permita visualizar con mayor facilidad la fila,
@@ -50,4 +87,33 @@ columna y submatriz en la que se encuentra, hacer anotaciones de los números
 continuarlo en otro momento, elegir entre varios niveles de dificultad, tomar
 el tiempo que le lleva resolver un tablero y llevar registro de sus estadísticas
 por nivel de dificultad y tiempo para resolverlo.
- 
+
+## Autor
+
+Mi nombre es [Sergio Terroso Cabrera](mailto:sergio.terroso@gmail.com), estudiante
+del curso de JavaScript, comisión 37515, en [Coderhouse](https://www.coderhouse.com.mx/)
+durante la primavera de 2022.
+
+## Dedicatorias y Agradecimientos
+
+Dedico este proyecto a mis hijos **Diego** y **Pablo**, por su apoyo y entusiasmo;
+a **Marisol** por su comprensión; a mi Papá **Carlos** y a mi Mamá **Esperanza**,
+quienes aunque no entendían lo que les compartía sobre mi curso y mi proyecto,
+siempre me dieron ánimos para continuar, a mis hermanas **Alejandra** y **Silvia**,
+por su entusiarmo y por creer en mí; a **Don Sixto** y **Don Pepe**, mis jefes, quienes
+me apoyaron dándome la flexibilidad de horarios necearia para tomar mis cursos; a mis
+compañeras **Gloria** y **Sandra**, y a mi compañero **Genaro Daniel**, por su comprensión
+por mi humor los días después de mis desvelos; a mis compañeros de cursada por sus consejos
+y ayudarme a resolver dudas; a mi mentor **Jorge "*Coki*" Figueroa** por su guía y consejo,
+y por animarme a tomar este curso en **Coderhouse**.
+
+Desde luego que también agradezco a **Coderhouse** por poner el conocimiento de calidad al
+alcance gracias a sus excelentes contenidos y la *Coder Beca*, sin la cual no hubiese podido
+tomar el curso que me permitió llevar a cabo este proyecto.
+
+Agradezco a mi profesor **Nicolás "*Nico*" Martini**, y en especial a mi Tutor
+**Francisco "*Fran*" Imanol Suárez**, por su apoyo y consejos para que pudiera aprender las
+habilidades necesarias para hacer este proyecto.
+
+También agradezco a todos aquellos que estuvieron alrededor de mí y, sin saberlo, fueron
+apoyo y me dieron ánimos para concretar este curso y este proyecto.
