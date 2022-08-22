@@ -3,68 +3,29 @@
  */
 class SudokuBoard {
     // Número de filas.
-    static #NUM_ROWS = 9;
+    static NUM_ROWS = 9;
 
     // Número de columnas.
-    static #NUM_COLS = 9;
-
-    // Niveles de dificultad.
-    static #LEVELS = {
-        // Nivel fácil
-        'easy': {
-            'levelName': 'Fácil',
-            'minSquareEmptyCells': 0,   // Número mínimo de celdas vacías en un Cuadro (3 x 3 celdas)
-            'maxSquareEmptyCells': 4,   // Número máximo de celdas vacías en un Cuadro (3 x 3 celdas)
-            'minRowEmptyCells': 0,      // Número mínimo de celdas vacías en una Fila (9 x 1 celdas - horizontal)
-            'maxRowEmptyCells': 5,      // Número máximo de celdas vacías en una Fila (9 x 1 celdas - horizontal)
-            'minColEmptyCells': 0,      // Número mínimo de celdas vacías en una Columna (1 x 9 celdas - vertical)
-            'maxColEmptyCells': 5,      // Número máximo de celdas vacías en una Columna (1 x 9 celdas - vertical)
-        },
-        // Nivel medio
-        'medium': {
-            'levelName': 'Medio',
-            'minSquareEmptyCells': 1,   // Número mínimo de celdas vacías en un Cuadro (3 x 3 celdas)
-            'maxSquareEmptyCells': 6,   // Número máximo de celdas vacías en un Cuadro (3 x 3 celdas)
-            'minRowEmptyCells': 1,      // Número mínimo de celdas vacías en una Fila (9 x 1 celdas - horizontal)
-            'maxRowEmptyCells': 6,      // Número máximo de celdas vacías en una Fila (9 x 1 celdas - horizontal)
-            'minColEmptyCells': 1,      // Número mínimo de celdas vacías en una Columna (1 x 9 celdas - vertical)
-            'maxColEmptyCells': 6,      // Número máximo de celdas vacías en una Columna (1 x 9 celdas - vertical)
-        },
-        // Nivel difícil
-        'hard': {
-            'levelName': 'Difícil',
-            'minSquareEmptyCells': 3,  // Número mínimo de celdas vacías en un Cuadro (3 x 3 celdas)
-            'maxSquareEmptyCells': 9,  // Número máximo de celdas vacías en un Cuadro (3 x 3 celdas)
-            'minRowEmptyCells': 4,      // Número mínimo de celdas vacías en una Fila (9 x 1 celdas - horizontal)
-            'maxRowEmptyCells': 9,      // Número máximo de celdas vacías en una Fila (9 x 1 celdas - horizontal)
-            'minColEmptyCells': 4,      // Número mínimo de celdas vacías en una Columna (1 x 9 celdas - vertical)
-            'maxColEmptyCells': 9,      // Número máximo de celdas vacías en una Columna (1 x 9 celdas - vertical)
-        }
-    }
-
+    static NUM_COLS = 9;
 
     /**
      * Define un tablero de Sudoku
      * 
-     * @param {string} level Nivel de dificultad del tablero.
+     * @param {SudokuGame.GAME_LEVEL} level Nivel de dificultad del tablero.
      */
-    constructor(level = 'easy') {
+    constructor(level = SudokuGame.GAME_LEVEL.EASY) {
         this.level = level
 
-        this._solved = false;
+        this.solved = false;
 
         // Hacerlo, por lo menos, una vez:
         do {
-            // Llenar la grilla con ceros (0's)
-            this._grid = SudokuBoard.getEmptyGrid();
-            // Intentar llenar la grilla con números válidos.
-            this.#fillGrid();
-        } while(!SudokuBoard.isValidGrid(this._grid));    // Hasta que la grilla sea válida.
+            // Intentar llenar la cuadrícula con números válidos.
+            this.grid = this.getBaseGrid();
+        } while(!SudokuBoard.isValidGrid(this.grid));    // Hasta que la cuadrícula sea válida.
 
-        this._playerGrid = SudokuBoard.getEmptyGrid();
-
-        // Genera la grilla 'jugable' para el jugador.
-        this._playerGrid = this.#getPlayerGrid();
+        // Genera la cuadrícula 'jugable' para el jugador.
+        this.playerGrid = this.getPlayerGrid();
     }
 
 
@@ -73,18 +34,12 @@ class SudokuBoard {
      * válido. Si el nuevo valor es diferente al nivel de dificultad anterior, 
      * borra todo el contenido del tablero y lo vuelve a poblar.
      * 
-     * @param {string} level El nuevo nivel de dificultad del tablero.
+     * @param {SudokuGame.GAME_LEVEL} level El nuevo nivel de dificultad del tablero.
      * @returns true si el nivel de dificultad proporcionado es válido, false de lo 
      * contrario.
      */
-    set level(level = 'easy') {
-        if (SudokuBoard.isValidLevel(level)) {
-            this._level = level;
-
-            return true;
-        }
-
-        return false;
+    set level(level = SudokuGame.GAME_LEVEL.EASY) {
+        this.level = level || SudokuGame.GAME_LEVEL.EASY;
     }
 
 
@@ -92,7 +47,7 @@ class SudokuBoard {
      * Devuelve el nivel de dificultad actual del tablero.
      */
     get level() {
-        return this._level;
+        return this.level;
     }
 
 
@@ -100,7 +55,7 @@ class SudokuBoard {
      * Devuelve el nombre del nivel de dificultad del tablero.
      */
     get levelName() {
-        return SudokuBoard.getLevelSpecs(this._level).levelName;
+        return this.level.levelName;
     }
 
 
@@ -108,7 +63,7 @@ class SudokuBoard {
      * Devuelve el arreglo de números que subyace en el tablero.
      */
     get grid() {
-        return this._grid;
+        return this.grid;
     }
 
 
@@ -118,7 +73,12 @@ class SudokuBoard {
      * @returns true si el tablero ya está resuelto, false de lo contrario.
      */
     get solved () {
-        return this._solved;
+        return this.solved;
+    }
+
+
+    validatePlayerGrid = () => {
+        return this.playerGrid === this.grid;
     }
 
 
@@ -143,47 +103,47 @@ class SudokuBoard {
             
             switch (squareIndex) {
                 case 0:
-                    this.#drawCellDiv(0, 0, squareDiv);
+                    this.drawCellDiv(0, 0, squareDiv);
                     boardDiv.appendChild(squareDiv);
                     break;
                 
                 case 1:
-                    this.#drawCellDiv(0, 3, squareDiv);
+                    this.drawCellDiv(0, 3, squareDiv);
                     boardDiv.appendChild(squareDiv);
                     break;
                 
                 case 2:
-                    this.#drawCellDiv(0, 6, squareDiv);
+                    this.drawCellDiv(0, 6, squareDiv);
                     boardDiv.appendChild(squareDiv);
                     break;
 
                 case 3:
-                    this.#drawCellDiv(3, 0, squareDiv);
+                    this.drawCellDiv(3, 0, squareDiv);
                     boardDiv.appendChild(squareDiv);
                     break;
 
                 case 4:
-                    this.#drawCellDiv(3, 3, squareDiv);
+                    this.drawCellDiv(3, 3, squareDiv);
                     boardDiv.appendChild(squareDiv);
                     break;
 
                 case 5:
-                    this.#drawCellDiv(3, 6, squareDiv);
+                    this.drawCellDiv(3, 6, squareDiv);
                     boardDiv.appendChild(squareDiv);
                     break;
 
                 case 6:
-                    this.#drawCellDiv(6, 0, squareDiv);
+                    this.drawCellDiv(6, 0, squareDiv);
                     boardDiv.appendChild(squareDiv);
                     break;
 
                 case 7:
-                    this.#drawCellDiv(6, 3, squareDiv);
+                    this.drawCellDiv(6, 3, squareDiv);
                     boardDiv.appendChild(squareDiv);
                     break;
 
                 case 8:
-                    this.#drawCellDiv(6, 6, squareDiv);
+                    this.drawCellDiv(6, 6, squareDiv);
                     boardDiv.appendChild(squareDiv);
                     break;
                 
@@ -205,7 +165,7 @@ class SudokuBoard {
      * @param {int} startColIndex El índice de la primera columna de la submatriz (cuadro)
      * @param {Node} parentNode El nodo padre en el que se dibujará la submatriz (cuadro)
      */
-    #drawCellDiv = (startRowIndex, startColIndex, parentNode) => {
+    drawCellDiv = (startRowIndex, startColIndex, parentNode) => {
         for (let i = startRowIndex; i < startRowIndex + 3; i++) {
             for (let j = startColIndex; j < startColIndex + 3; j++) {
                 const cellDiv = document.createElement('div');
@@ -221,8 +181,8 @@ class SudokuBoard {
                 cellValue.id = `value-${9 * i + j}`;
                 cellValue.classList.add('cell-value', 'hidden');
 
-                if (this._playerGrid[i][j] !== 0) {
-                    cellValue.textContent = `${this._playerGrid[i][j]}`;
+                if (this.playerGrid[i][j] !== 0) {
+                    cellValue.textContent = `${this.playerGrid[i][j]}`;
                     cellValue.classList.toggle('hidden');
                 }
 
@@ -240,35 +200,52 @@ class SudokuBoard {
 
 
     /**
-     * Llena la grilla del Tablero con valores de Sudoku.
+     * Llena la cuadrícula del Tablero con valores de Sudoku.
      * 
-     * @param {Array[]} grid La grilla que se va a poblar con valores de Sudoku.
-     * @param {Array} shuffledNumbers Un arreglo de números válidos desordenado.
-     * @returns true si la grilla pudo ser llenada con valores de Sudoku, false de lo contrario.
+     * @returns true si la cuadrícula pudo ser llenada con valores de Sudoku,
+     * false de lo contrario.
      */
-    #fillGrid = () => {
-        // Inicializar las variables con las que se trabajará la grilla.
-        let intRow = 0;
-        let intCol = 0;
-        let validValue = 0;
+    getBaseGrid = () => {
+        // Inicializa cuadrícula
+        const grid = [
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0]
+        ];
+
+        // Inicializar las variables con las que se trabajará la cuadrícula.
+        let intRow = 0;     // Índice entero de la fila.
+
+        let intCol = 0;     // Índice entero de la columna.
+
+        let intValue = 0;   // Valor entero de la celda (1..9)
+
         // Un arreglo desordenado de números válidos.
         let shuffledNumbers = [];
 
-        // Para las 81 celdas de una grilla ...
+        // Para las 81 celdas de una cuadrícula ...
         for (let i = 0; i < 81; i++) {
-            // El índice de la fila según el número de celda: 0 -> 8 = 0, 9 -> 17 = 1, ..., 72 -> 80 = 8
+            // El índice de la fila según el número de celda: 0..8 = 0, 9..17 = 1, ..., 72..80 = 8
             intRow = Math.floor(i / 9);
-            // El índice de la columna según el número de la celda: 0 = 0, 1 = 1, 2 = 2, ..., 80 = 8
+
+            // El índice de la columna según el número de la celda: 0 = 0, 1 = 1, ..., 8 = 8, 9 = 0, 
+            // 10 = 1, ..., 80 = 8
             intCol = i % 9;
 
-            // El arreglo de números de la grilla en la fila correspondiente a la celda en turno.
-            let rowArray = this._grid[intRow];
+            // El arreglo de números de la cuadrícula en la fila correspondiente a la celda en turno.
+            let rowArray = grid[intRow];
 
-            // El arreglo de números de la grilla en la columna correspondiente a la celda en turno.
-            let colArray = this._grid.map(row => row[intCol]);
+            // El arreglo de números de la cuadrícula en la columna correspondiente a la celda en turno.
+            let colArray = grid.map(row => row[intCol]);
 
             // El arreglo de números en el cuadro donde se encuentra la celda en turno.
-            let squareArray = SudokuBoard.getSquareArrayByRowCol(this._grid, intRow, intCol);
+            let squareArray = SudokuBoard.getSquareArrayByRowCol(grid, intRow, intCol);
 
             // Si el arreglo desordenado de números válidos está vacío ...
             if (shuffledNumbers.length === 0) {
@@ -277,7 +254,7 @@ class SudokuBoard {
             }
 
             // Busca un número válido en el arreglo desordenado de números válidos:
-            validValue = shuffledNumbers.find((item, index) => {
+            intValue = shuffledNumbers.find((item, index) => {
                 // Si hay algún número en el arreglo desordenado que no esté en ninguno de los arreglos (fila, columna, cuadro) ...
                 if (rowArray.indexOf(item) === -1 && colArray.indexOf(item) === -1 && squareArray.indexOf(item) === -1) {
                     // Elimina ese número del arreglo desordenado de números válidos y lo devuelve (para guardarlo en validValue)
@@ -286,40 +263,43 @@ class SudokuBoard {
             });
 
             // Si no encuentra un número válido ...
-            if (!validValue) {
+            if (!intValue) {
                 // ... asignar cero (0) a esa celda y ...
-                this._grid[intRow][intCol] = 0;
+                grid[intRow][intCol] = 0;
                 
-                // ... darse por vencido
+                // ... darse por vencido (sale del bucle for)
                 break;
             } else {
                 // De lo contrario asigna el valor válido a esa celda.
-                this._grid[intRow][intCol] = validValue;
+                grid[intRow][intCol] = intValue;
             }
         }
+
+        // Devuelve la cuadrícula con la que ha estado trabajando
+        return grid;
     }
 
 
     /**
-     * 'Borra', convirtiendo a ceros (0's), algunos valores de la grilla original
-     * para que el jugador pueda resolver la grilla 'incompleta'.
+     * 'Borra', convirtiendo a ceros (0's), algunos valores de la cuadrícula original
+     * para que el jugador pueda resolver la cuadrícula 'incompleta'.
      * 
-     * @returns Una copia de la grilla original con algunos elementos removidos.
+     * @returns Una copia de la cuadrícula original con algunos elementos removidos.
      */
-     #getPlayerGrid = () => {
+     getPlayerGrid = () => {
         // Lista de las celdas 'visitadas' para borrar.
         const visitedCellArray = [];
 
         // Número aleatorio de celdas a borrar en cada cuadro.
         let randomCellDeleteAmount = 0;
 
-        // Clona la grilla original para tener la solución como referencia y 
+        // Clona la cuadrícula original para tener la solución como referencia y 
         // trabajar sobre el clon.
-        const playerGrid = this._grid.slice().map(row => row.slice());
+        const grid = this.grid.slice().map(row => row.slice());
 
         // Constantes donde se guardarán los límites de celdas 'vacías' por cuadro,
         // fila y columna.
-        const {minSquareEmptyCells, maxSquareEmptyCells, maxRowEmptyCells, maxColEmptyCells} = SudokuBoard.getLevelSpecs(this.level);
+        const {minSquareEmptyCells, maxSquareEmptyCells, maxRowEmptyCells, maxColEmptyCells} = this.level;
 
         // Para cada cuadro del tablero de Sudoku ...
         for (let squareIndex = 0; squareIndex < 9; squareIndex++) {
@@ -357,21 +337,21 @@ class SudokuBoard {
                     // celda que se va a borrar (respecto del cuadro actual).
                     randomColIndex = SudokuBoard.getRandomInteger(0, 2) + 3 * (squareIndex % 3);
 
-                    // Calcular el índice absoluto de la celda (0..80) dentro de la grilla de
+                    // Calcular el índice absoluto de la celda (0..80) dentro de la cuadrícula de
                     // Sudoku, para verificar que no se haya calculado la misma anteriormente.
                     deleteCellIndex = 9 * randomRowIndex + randomColIndex;
 
                     // Y repetir, si es necesario, cuando el índice de la celda ya se encuentra en 
                     // la lista de celdas visitadas.
 
-                    // Extraer la fila completa de la grilla de trabajo
-                    const rowArray = playerGrid[randomRowIndex];
+                    // Extraer la fila completa de la cuadrícula de trabajo
+                    const rowArray = grid[randomRowIndex];
 
                     // Contar el número de celdas 'vacías' en la fila
                     emptyCellsInRow = rowArray.reduce(item => {item === 0}, 0);
 
-                    // Extraer la columna completa de la grilla de trabajo
-                    const colArray = playerGrid.map(row => row[randomColIndex]);
+                    // Extraer la columna completa de la cuadrícula de trabajo
+                    const colArray = grid.map(row => row[randomColIndex]);
 
                     // Contar el número de celdas 'vacías' en la columna
                     emptyCellsInCol = colArray.reduce(item => {item === 0}, 0);
@@ -390,12 +370,13 @@ class SudokuBoard {
 
                 // Si se llega a este punto, es porque no se ha llegado al límite máximo de 
                 // celdas 'borradas' en la fila o columna, según el nivel, por lo que se 'borra' 
-                // esa celda de la grilla de trabajo.
-                playerGrid[randomRowIndex][randomColIndex] = 0;
+                // esa celda de la cuadrícula de trabajo.
+                grid[randomRowIndex][randomColIndex] = 0;
             }
         }
 
-        return playerGrid;
+        // Devuelve la cuadrícula clonada, con las celdas 'vacías'
+        return grid;
     }
 
 
@@ -405,37 +386,19 @@ class SudokuBoard {
      * @returns Una cadena de caracteres que indica el nivel de dificultad del tablero.
      */
     toString = () => {
-        return `Tablero de Sudoku: Nivel de dificultad ${SudokuBoard.getLevelName(this.level)}`;
-    }
-
-
-    /**
-     * Devuelve una grilla llena de ceros (0's).
-     */
-     static getEmptyGrid = () => {
-        return [
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        ];
+        return `Tablero de Sudoku: Nivel de dificultad ${this.level.levelName}`;
     }
 
 
     /**
      * Extrae un arreglo de valores (números) que corresponden a una submatriz,
-     * dentro de la grilla general del Sudoku, identificada por una fila y 
+     * dentro de la cuadrícula general del Sudoku, identificada por una fila y 
      * columna específicas.
      * 
-     * @param {Array[]} grid La grilla de la que se desea extraer una 
+     * @param {Array[]} grid La cuadrícula de la que se desea extraer una 
      * submatriz.
-     * @param {int} row El índice de la fila dentro de la grilla.
-     * @param {int} col El índice de la columna dentro de la grilla.
+     * @param {int} row El índice de la fila dentro de la cuadrícula.
+     * @param {int} col El índice de la columna dentro de la cuadrícula.
      * @returns Un arreglo con los números que corresponden a la submatriz 
      * dentro del cuadro que corresponde a la fila y columna proporcionados.
      */
@@ -443,10 +406,10 @@ class SudokuBoard {
         // Inicializa el arreglo final a vacío.
         let squareArray = [];
 
-        // Primera validación: La grilla tiene 9 filas.
+        // Primera validación: La cuadrícula tiene 9 filas.
         let allIsValid = grid.length === 9;
 
-        // Segunda validación: Cada fila de la grilla tiene 9 celdas.
+        // Segunda validación: Cada fila de la cuadrícula tiene 9 celdas.
         grid.forEach(gridRow => {
             allIsValid &&= gridRow.length === 9;
         });
@@ -473,7 +436,7 @@ class SudokuBoard {
     /**
      * Devuelve el índice del cuadrado que corresponde a la celda identificada 
      * por el índice de fila y columna (enteros entre 0 y 8, inclusive) de la 
-     * grilla de un tablero de Sudoku.
+     * cuadrícula de un tablero de Sudoku.
      * 
      * @param {int} rowIndex Índice de la fila (entero entre 0 y 8, inclusive)
      * @param {int} colIndex Índice de la columna (entero entre 0 y 8, inclusive)
@@ -509,10 +472,10 @@ class SudokuBoard {
     }
     
     /**
-     * Valida si la grilla especificada es válida, según las reglas del Sudoku.
+     * Valida si la cuadrícula especificada es válida, según las reglas del Sudoku.
      * 
-     * @param {Array} grid La grilla bidimensional a validar.
-     * @returns true si la grilla es válida (según las reglas del Sudoku), false de lo contrario.
+     * @param {Array} grid La cuadrícula bidimensional a validar.
+     * @returns true si la cuadrícula es válida (según las reglas del Sudoku), false de lo contrario.
      */
     static isValidGrid = grid => {
         let retVal = true;
@@ -526,66 +489,6 @@ class SudokuBoard {
         return retVal;
     }
 
-    /**
-     * Valida si un nivel de dificultad es válido.
-     * 
-     * @param {string} level El nivel de dificultad a validar.
-     * @returns true si el nivel proporcionado es válido, false de lo contrario.
-     */
-    static isValidLevel = level => {
-        if (level === null) return false;
-
-        if (SudokuBoard.getValidLevels().find(item => item === level)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Devuelve un arreglo de cadenas de caracteres con los niveles de dificultad
-     * posibles para un tablero de Sudoku.
-     * 
-     * @returns Un arreglo con los niveles de dificultad válidos.
-     */
-    static getValidLevels = () => {
-        return Object.keys(SudokuBoard.#LEVELS);
-    }
-
-    /**
-     * Devuelve el nivel de dificultad por defecto. Es el nivel de dificultad con el 
-     * que se configura el tablero de Sudoku si no se proporciona un nivel de dificultad
-     * válido en el constructor.
-     * 
-     * @returns El nivel de dificultad por defecto.
-     */
-    static getDefaultLevel = () => {
-        return SudokuBoard.getValidLevels()[0];
-    }
-
-    /**
-     * Devuelve el nombre del nivel de dificultad proporcionado.
-     * 
-     * @param {string} level El nivel de dificultad cuyo nombre se desea saber.
-     * @returns Una cadena de caracteres con el nombre del nivel de dificultad que 
-     * corresponde al valor proporcionado, false si no es válido el nivel de dificultad 
-     * proporcionado.
-     */
-    static getLevelName = level => {
-        if (SudokuBoard.isValidLevel(level)) {
-            return SudokuBoard.#LEVELS[level].levelName;
-        }
-
-        return '';
-    }
-
-    static getLevelSpecs = level => {
-        if (SudokuBoard.isValidLevel(level)) {
-            return SudokuBoard.#LEVELS[level];
-        }
-
-        return '';
-    }
 
     /**
      * Devuelve un arreglo con los valores válidos para una Celda (Cell) de Sudoku.
@@ -612,14 +515,14 @@ class SudokuBoard {
 
 
     static solveGrid(grid) {
-        // Inicializa las variable con las que se recorre y resuelve la grilla.
+        // Inicializa las variable con las que se recorre y resuelve la cuadrícula.
         let intRow = 0;
         let intCol = 0;
         let validValue = 0;
         // Un arreglo desordenado de números válidos.
         let shuffledNumbers = [];
 
-        // Para las 81 celdas de la grilla:
+        // Para las 81 celdas de la cuadrícula:
         for (let i = 0; i < 81; i++) {
             // ïndice de la fila.
             intRow = Math.floor(i / 9);
@@ -628,7 +531,7 @@ class SudokuBoard {
 
             // Si la celda correspondiente contiene un cero (0) ...
             if (grid[intRow][intCol] === 0) {
-                // ... intenta resolver la grilla.
+                // ... intenta resolver la cuadrícula.
 
                 // El arreglo de la fila correspondiente.
                 let rowArray = grid[intRow];
