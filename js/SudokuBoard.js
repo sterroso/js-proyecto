@@ -16,13 +16,13 @@ class SudokuBoard {
     constructor(level = SudokuGame.GAME_LEVEL.EASY) {
         this.level = level
 
-        this.solved = false;
+        this._solved = false;
 
         // Hacerlo, por lo menos, una vez:
         do {
             // Intentar llenar la cuadrícula con números válidos.
-            this.grid = this.getBaseGrid();
-        } while(!SudokuBoard.isValidGrid(this.grid));    // Hasta que la cuadrícula sea válida.
+            this.baseGrid = this.fillBaseGrid();
+        } while(!SudokuBoard.isValidGrid(this.baseGrid));    // Hasta que la cuadrícula sea válida.
 
         // Genera la cuadrícula 'jugable' para el jugador.
         this.playerGrid = this.getPlayerGrid();
@@ -39,7 +39,7 @@ class SudokuBoard {
      * contrario.
      */
     set level(level = SudokuGame.GAME_LEVEL.EASY) {
-        this.level = level || SudokuGame.GAME_LEVEL.EASY;
+        this._level = level || SudokuGame.GAME_LEVEL.EASY;
     }
 
 
@@ -47,7 +47,7 @@ class SudokuBoard {
      * Devuelve el nivel de dificultad actual del tablero.
      */
     get level() {
-        return this.level;
+        return this._level;
     }
 
 
@@ -60,10 +60,51 @@ class SudokuBoard {
 
 
     /**
+     * Establece la cuadrícula base.
+     */
+    set baseGrid(value) {
+        this._baseGrid = value || [
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0]
+        ];
+    }
+
+
+    /**
      * Devuelve el arreglo de números que subyace en el tablero.
      */
-    get grid() {
-        return this.grid;
+    get baseGrid() {
+        return this._baseGrid;
+    }
+
+
+    /**
+     * Establece la cuadrícula del jugador.
+     */
+    set playerGrid(value) {
+        this._playerGrid = value || [
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0]
+        ];
+    }
+
+
+    get playerGrid() {
+        return this._playerGrid;
     }
 
 
@@ -73,12 +114,12 @@ class SudokuBoard {
      * @returns true si el tablero ya está resuelto, false de lo contrario.
      */
     get solved () {
-        return this.solved;
+        return this._solved;
     }
 
 
     validatePlayerGrid = () => {
-        return this.playerGrid === this.grid;
+        return this.playerGrid === this.baseGrid;
     }
 
 
@@ -202,10 +243,11 @@ class SudokuBoard {
     /**
      * Llena la cuadrícula del Tablero con valores de Sudoku.
      * 
-     * @returns true si la cuadrícula pudo ser llenada con valores de Sudoku,
-     * false de lo contrario.
+     * @returns Una cuadrícula (un arreglo bidimensional de 9 filas x 9
+     * columnas), lleno con números válidos, de acuerdo don las reglas 
+     * del Sudoku.
      */
-    getBaseGrid = () => {
+    fillBaseGrid = () => {
         // Inicializa cuadrícula
         const grid = [
             [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -295,7 +337,7 @@ class SudokuBoard {
 
         // Clona la cuadrícula original para tener la solución como referencia y 
         // trabajar sobre el clon.
-        const grid = this.grid.slice().map(row => row.slice());
+        const grid = this.baseGrid.slice().map(row => row.slice());
 
         // Constantes donde se guardarán los límites de celdas 'vacías' por cuadro,
         // fila y columna.
