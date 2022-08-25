@@ -68,86 +68,76 @@ class SudokuGame {
             showRemainingDigits: true,
             autoNotesRemoval: true,
             showTimer: true,
-            differentiateLockedCells: true,
-            doubleTapToRemoveCellContent: false,
-            holdToRemoveCellContent: false,
+            differentiateLockedCells: true
         }
 
         // Mapeo de 'Elementos de juego' a Nodos del HTML
-        this.htmlNodeMap = {
-            squares: [
-                { index: 0, nodeId: null, cellsIndexes: [0, 1, 2, 9, 10, 11, 18, 19, 20] }, 
-                { index: 1, nodeId: null, cellsIndexes: [3, 4, 5, 12, 13, 14, 21, 22, 23] }, 
-                { index: 2, nodeId: null, cellsIndexes: [6, 7, 8, 15, 16, 17, 24, 25, 26] },
-                { index: 3, nodeId: null, cellsIndexes: [27, 28, 29, 36, 37, 38, 45, 46, 47] }, 
-                { index: 4, nodeId: null, cellsIndexes: [30, 31, 32, 39, 40, 41, 48, 49, 50] }, 
-                { index: 5, nodeId: null, cellsIndexes: [33, 34, 35, 42, 43, 44, 51, 52, 53] },
-                { index: 6, nodeId: null, cellsIndexes: [54, 55, 56, 63, 64, 65, 72, 73, 74] }, 
-                { index: 7, nodeId: null, cellsIndexes: [57, 58, 59, 66, 67, 68, 75, 76, 77] }, 
-                { index: 8, nodeId: null, cellsIndexes: [60, 61, 62, 69, 70, 71, 78, 79, 80] },
-            ],
-            cells: [
-                { index: 0, nodeId: null }, { index: 1, nodeId: null }, { index: 2, nodeId: null },
-                { index: 3, nodeId: null }, { index: 4, nodeId: null }, { index: 5, nodeId: null },
-                { index: 6, nodeId: null }, { index: 7, nodeId: null }, { index: 8, nodeId: null },
-                { index: 9, nodeId: null }, { index: 10, nodeId: null }, { index: 11, nodeId: null },
-                { index: 12, nodeId: null }, { index: 13, nodeId: null }, { index: 14, nodeId: null },
-                { index: 15, nodeId: null }, { index: 16, nodeId: null }, { index: 17, nodeId: null },
-                { index: 18, nodeId: null }, { index: 19, nodeId: null }, { index: 20, nodeId: null },
-                { index: 21, nodeId: null }, { index: 22, nodeId: null }, { index: 23, nodeId: null },
-                { index: 24, nodeId: null }, { index: 25, nodeId: null }, { index: 26, nodeId: null },
-                { index: 27, nodeId: null }, { index: 28, nodeId: null }, { index: 29, nodeId: null },
-                { index: 30, nodeId: null }, { index: 31, nodeId: null }, { index: 32, nodeId: null },
-                { index: 33, nodeId: null }, { index: 34, nodeId: null }, { index: 35, nodeId: null },
-                { index: 36, nodeId: null }, { index: 37, nodeId: null }, { index: 38, nodeId: null },
-                { index: 39, nodeId: null }, { index: 40, nodeId: null }, { index: 41, nodeId: null },
-                { index: 42, nodeId: null }, { index: 43, nodeId: null }, { index: 44, nodeId: null },
-                { index: 45, nodeId: null }, { index: 46, nodeId: null }, { index: 47, nodeId: null },
-                { index: 48, nodeId: null }, { index: 49, nodeId: null }, { index: 50, nodeId: null },
-                { index: 51, nodeId: null }, { index: 52, nodeId: null }, { index: 53, nodeId: null },
-                { index: 54, nodeId: null }, { index: 55, nodeId: null }, { index: 56, nodeId: null },
-                { index: 57, nodeId: null }, { index: 58, nodeId: null }, { index: 59, nodeId: null },
-                { index: 60, nodeId: null }, { index: 61, nodeId: null }, { index: 62, nodeId: null },
-                { index: 63, nodeId: null }, { index: 64, nodeId: null }, { index: 65, nodeId: null },
-                { index: 66, nodeId: null }, { index: 67, nodeId: null }, { index: 68, nodeId: null },
-                { index: 69, nodeId: null }, { index: 70, nodeId: null }, { index: 71, nodeId: null },
-                { index: 72, nodeId: null }, { index: 73, nodeId: null }, { index: 74, nodeId: null },
-                { index: 75, nodeId: null }, { index: 76, nodeId: null }, { index: 77, nodeId: null },
-                { index: 78, nodeId: null }, { index: 79, nodeId: null }, { index: 80, nodeId: null }
-            ],
-            timer: null,
-            digits: [
-                { digit: 1, nodeId: null },
-                { digit: 2, nodeId: null },
-                { digit: 3, nodeId: null },
-                { digit: 4, nodeId: null },
-                { digit: 5, nodeId: null },
-                { digit: 6, nodeId: null },
-                { digit: 7, nodeId: null },
-                { digit: 8, nodeId: null },
-                { digit: 9, nodeId: null }
-            ],
-            remainingDigits: [
-                { digit: 1, nodeId: null },
-                { digit: 2, nodeId: null },
-                { digit: 3, nodeId: null },
-                { digit: 4, nodeId: null },
-                { digit: 5, nodeId: null },
-                { digit: 6, nodeId: null },
-                { digit: 7, nodeId: null },
-                { digit: 8, nodeId: null },
-                { digit: 9, nodeId: null }
-            ],
-            settings: {
-                highlightSameDigits: null,
-                showRemainingDigits: null,
-                autoNotesRemoval: null,
-                showTimer: null,
-                differentiateLockedCells: null,
-                doubleTapToRemoveCellContent: null,
-                holdToRemoveCellContent: null
+        this.htmlElements = [
+            {
+                tagName: 'div',
+                nodeId: 'panel-buttons-tray',
+                elements: [
+                    { 
+                        tagName: 'button', 
+                        nodeId: 'open-stats-panel-button', 
+                        classList: ['open-button'],
+                        elements: [ { tagName: 'span', classList: ['material-symbols-outlined'], textContent: 'menu' } ]
+                    },
+                    { 
+                        tagName: 'button', 
+                        nodeId: 'open-settings-panel-button', 
+                        classList: ['open-button'],
+                        elements: [ { tagName: 'span', classList: ['material-symbols-outlined'], textContent: 'settings' } ]
+                    }
+                ]
+            },
+            {
+                tagName: 'aside',
+                nodeId: 'stats-panel',
+                classList: ['hidden'],
+                elements: [
+                    {
+                        tagName: 'button',
+                        nodeId: 'stats-panel-close-button',
+                        classList: ['close-button'],
+                        elements: [ { tagName: 'span', classList: ['material-symbols-outlined'], textContent: 'close' } ]
+                    },
+                    {}
+                ]
+            },
+            /*
+            */
+            { 
+                nodeId: 'timer',
+            },
+            {
+                commonClassList: ['digits-button'],
+                elements: [
+                    { digit: 1, nodeId: 'digits-button-1' },
+                    { digit: 2, nodeId: 'digits-button-2' },
+                    { digit: 3, nodeId: 'digits-button-3' },
+                    { digit: 4, nodeId: 'digits-button-4' },
+                    { digit: 5, nodeId: 'digits-button-5' },
+                    { digit: 6, nodeId: 'digits-button-6' },
+                    { digit: 7, nodeId: 'digits-button-7' },
+                    { digit: 8, nodeId: 'digits-button-8' },
+                    { digit: 9, nodeId: 'digits-button-9' }
+                ]
+            },
+            {
+                commonClassList: ['checkbox'],
+                commonAttributesList: [
+                    { name: 'role', value: 'switch' }
+                ],
+                elements: [
+                    { nodeId: 'button-highlight-same-digits', attributesList: [ { name: 'aria-checked', defaultValue: 'true' } ] },
+                    { nodeId: 'button-show-remaining-digits', attributesList: [ { name: 'aria-checked', defaultValue: 'true' } ] },
+                    { nodeId: 'button-auto-notes-removal', attributesList: [ { name: 'aria-checked', defaultValue: 'true' } ] },
+                    { nodeId: 'button-show-timer', attributesList: [ { name: 'aria-checked', defaultValue: 'true' } ] },
+                    { nodeId: 'button-differentiate-locked-cells', attributesList: [ { name: 'aria-checked', defaultValue: 'true' } ] }
+                ]
             }
-        }
+        ];
     }
 
 
@@ -166,6 +156,40 @@ class SudokuGame {
      */
     get createdOn() {
         return this._createdOn;
+    }
+
+
+    // Devuelve el arreglo con todos los períodos de juego
+    get playPeriods() {
+        return this._playPeriods;
+    }
+
+
+    get totalPlayTime() {
+        // Variable donde se guardará el tiempo total (en milisegundos)
+        let totalTime = 0;
+
+        // Si ya está terminado, o está parado ...
+        if (this.isTerminated || !this.isRunning) {
+            // El tiempo total es la suma de milisegundos de todos los períodos de tiempo.
+            totalTime = this.playPeriods.reduce((accumulator, period) => accumulator + period.totalMilliseconds, 0);
+
+        // De lo contrario ...
+        } else {
+            // Un tiempo parcial es la suma de todos los períodos de tiempo + 1 milisegundo, 
+            // porque el total del período corriendo actualmente es siempre -1.
+            let partialTime = this.playPeriods.reduce((accumulator, period) => accumulator + period.totalMilliseconds, 1);
+
+            // El tiempo de juego hasta el momento es la diferencia del tiempo actual y la
+            // última vez que arraancó el juego.
+            let currentTime = Date.now() - this.getLastStartTimestamp();
+
+            // El tiempo total es la suma del tiempo parcial y el tiempo de juego hasta el momento.
+            totalTime = partialTime + currentTime;
+        }
+
+        // Devuelve el tiempo total de juego hasta el momento.
+        return totalTime;
     }
 
     
@@ -209,7 +233,7 @@ class SudokuGame {
      * 
      * @returns true si el reloj del juego está corriendo, false de lo contrario.
      */
-    isRunning = () => {
+    get isRunning() {
         return this._running;
     }
 
@@ -220,7 +244,7 @@ class SudokuGame {
      * 
      * @returns true si el juego ya fue terminado, false de lo contrario.
      */
-    isTerminated = () => {
+    get isTerminated() {
         return this._terminated;
     }
 
@@ -232,7 +256,7 @@ class SudokuGame {
      * @returns true si se inició un nuevo período de juego, false de lo contrario.
      */
     start = () => {
-        if (!this.isTerminated() && !this.isRunning()) {
+        if (!this.isTerminated && !this.isRunning) {
             // Captura la fecha y hora actual (en milisegundos desde el período de referencia).
             const startTime = Date.now();
 
@@ -273,7 +297,7 @@ class SudokuGame {
      * @returns true si se detuvo el período de juego activo, false de lo contrario.
      */
     stop = () => {
-        if (!this.isTerminated() && this.isRunning()) {
+        if (!this.isTerminated && this.isRunning) {
             // Captura la fecha y hora actual (en milisegundos desde el período de refrencia).
             const stopTime = Date.now();
 
@@ -327,6 +351,21 @@ class SudokuGame {
      */
     getLastStartTimestamp = () => {
         return this._currentStartTime;
+    }
+
+
+    getCurrentTimerString = (maxFractionalSeconds = 0) => {
+        const totalTime = this.totalPlayTime;
+
+        const totalMinutes = Math.floor(totalTime / (1000 * 60));
+
+        const totalSeconds = (totalTime - (totalMinutes * 1000 * 60)) / 1000;
+
+        const minutesString = new Intl.NumberFormat('es-MX', { minimumIntegerDigits: 1 }).format(totalMinutes);
+
+        const secondsString = new Intl.NumberFormat('es-MX', { maximumFractionDigits: maxFractionalSeconds }).format(totalSeconds);
+
+        return `${minutesString}m ${secondsString}s`;
     }
 
 

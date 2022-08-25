@@ -5,7 +5,7 @@ const sudokuBoardContainer = document.getElementById('sudoku-board-container');
 const game = SudokuGame.getSudokuGame();
 
 // Dibuja el tablero en el contenedor del tablero de Sudoku.
-game.board.draw(sudokuBoardContainer);
+sudokuBoardContainer.appendChild(game.board.getBoardFragment());
 
 
 // Panel de usuario.
@@ -69,3 +69,54 @@ settingsButtons.forEach(button => {
         console.debug(game.settings);
     });
 });
+
+
+// Botón de arranque / parada del juego y reloj
+const startButton = document.getElementById('start-button');
+
+// Id del intervalo de actualización del timer
+let timerIntervalId;
+
+const timerContainer = document.getElementById('timer-container');
+
+// Evento de 'click' para el botón de arranque / parada del juego y reloj
+startButton.addEventListener('click', event => {
+    const startButtonSpan = startButton.getElementsByTagName('span')[0];
+
+    if (startButton.classList.contains('running')) {
+        startButtonSpan.textContent = 'timer';
+
+        game.stop();
+
+        clearInterval(timerIntervalId);
+
+        if (game.settings.showTimer) {
+            timerContainer.textContent = "";
+        }
+
+        Toastify({
+            text: 'Juego detenido',
+            duration: 2500,
+            gravity: 'bottom',
+        }).showToast();
+    } else {
+        startButtonSpan.textContent = 'timer_off';
+
+        game.start();
+
+        timerIntervalId = setInterval(() => {
+            if (game.settings.showTimer) {
+                timerContainer.textContent = game.getCurrentTimerString();
+            }
+        }, 200);
+
+        Toastify({
+            text: 'Juego iniciado',
+            duration: 2500,
+            gravity: 'bottom',
+        }).showToast();
+    }
+
+    startButton.classList.toggle('running');
+});
+

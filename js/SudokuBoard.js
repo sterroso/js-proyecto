@@ -18,10 +18,44 @@ class SudokuBoard {
 
         this._solved = false;
 
+        // Nodos html de los principales elementos del tablero
+        this.htmlNodes = {
+            squares: {
+                commonClassList: ['square'],
+                commonNodeIdPrefix: 'square-',
+                elements: [
+                    { index: 0, cellsIndexes: [0, 1, 2, 9, 10, 11, 18, 19, 20] }, 
+                    { index: 1, cellsIndexes: [3, 4, 5, 12, 13, 14, 21, 22, 23] }, 
+                    { index: 2, cellsIndexes: [6, 7, 8, 15, 16, 17, 24, 25, 26] },
+                    { index: 3, cellsIndexes: [27, 28, 29, 36, 37, 38, 45, 46, 47] }, 
+                    { index: 4, cellsIndexes: [30, 31, 32, 39, 40, 41, 48, 49, 50] }, 
+                    { index: 5, cellsIndexes: [33, 34, 35, 42, 43, 44, 51, 52, 53] },
+                    { index: 6, cellsIndexes: [54, 55, 56, 63, 64, 65, 72, 73, 74] }, 
+                    { index: 7, cellsIndexes: [57, 58, 59, 66, 67, 68, 75, 76, 77] }, 
+                    { index: 8, cellsIndexes: [60, 61, 62, 69, 70, 71, 78, 79, 80] },
+                ]
+            },
+            cells: {
+                commonClassList: ['cell'],
+                commonNodeIdPrefix: 'cell-',
+                elements: [
+                    { index: 0 }, { index: 1 }, { index: 2 }, { index: 3 }, { index: 4 }, { index: 5 }, { index: 6 }, { index: 7 }, { index: 8 },
+                    { index: 9 }, { index: 10 }, { index: 11 }, { index: 12 }, { index: 13 }, { index: 14 }, { index: 15 }, { index: 16 }, { index: 17 },
+                    { index: 18 }, { index: 19 }, { index: 20 }, { index: 21 }, { index: 22 }, { index: 23 }, { index: 24 }, { index: 25 }, { index: 26 },
+                    { index: 27 }, { index: 28 }, { index: 29 }, { index: 30 }, { index: 31 }, { index: 32 }, { index: 33 }, { index: 34 }, { index: 35 },
+                    { index: 36 }, { index: 37 }, { index: 38 }, { index: 39 }, { index: 40 }, { index: 41 }, { index: 42 }, { index: 43 }, { index: 44 },
+                    { index: 45 }, { index: 46 }, { index: 47 }, { index: 48 }, { index: 49 }, { index: 50 }, { index: 51 }, { index: 52 }, { index: 53 },
+                    { index: 54 }, { index: 55 }, { index: 56 }, { index: 57 }, { index: 58 }, { index: 59 }, { index: 60 }, { index: 61 }, { index: 62 },
+                    { index: 63 }, { index: 64 }, { index: 65 }, { index: 66 }, { index: 67 }, { index: 68 }, { index: 69 }, { index: 70 }, { index: 71 },
+                    { index: 72 }, { index: 73 }, { index: 74 }, { index: 75 }, { index: 76 }, { index: 77 }, { index: 78 }, { index: 79 }, { index: 80 }
+                ],
+            },
+        };
+
         // Hacerlo, por lo menos, una vez:
         do {
             // Intentar llenar la cuadrícula con números válidos.
-            this.baseGrid = this.fillBaseGrid();
+            this.baseGrid = this.getBaseGrid();
         } while(!SudokuBoard.isValidGrid(this.baseGrid));    // Hasta que la cuadrícula sea válida.
 
         // Genera la cuadrícula 'jugable' para el jugador.
@@ -124,14 +158,12 @@ class SudokuBoard {
 
 
     /**
-     * Dibuja un tablero de Sudoku en un elemento (Nodo) dentro de un documento
-     * html.
+     * Devuelve un fragmento html con el tablero de Sudoku.
      * 
-     * @param {Node} parentNode El nodo (elemento) padre donde se dibujará el tablero.
+     * @returns un fragmento html (documentFragment) con el tablero Sudoku.
      */
-    draw = (parentNode) => {
-        parentNode.innerHTML = '';
-        
+    getBoardFragment = (parentNode) => {
+        // El fragmento html que continene al tablero de Sudoku
         const boardFragment = document.createDocumentFragment();
 
         const boardDiv = document.createElement('div');
@@ -195,7 +227,7 @@ class SudokuBoard {
 
         boardFragment.appendChild(boardDiv);
 
-        parentNode.appendChild(boardFragment);
+        return boardFragment;
     }
 
 
@@ -247,7 +279,7 @@ class SudokuBoard {
      * columnas), lleno con números válidos, de acuerdo don las reglas 
      * del Sudoku.
      */
-    fillBaseGrid = () => {
+    getBaseGrid = () => {
         // Inicializa cuadrícula
         const grid = [
             [0, 0, 0, 0, 0, 0, 0, 0, 0],
