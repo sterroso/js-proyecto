@@ -1,11 +1,11 @@
 // Conetendor del tablero de Sudoku.
-const sudokuBoardContainer = document.getElementById('sudoku-board-container');
+const sudokuBoard = document.getElementById('sudoku-board');
 
 // Juego
 const game = SudokuGame.getSudokuGame();
 
 // Dibuja el tablero en el contenedor del tablero de Sudoku.
-sudokuBoardContainer.appendChild(game.board.getBoardFragment());
+sudokuBoard.appendChild(game.board.getBoardFragment());
 
 
 // Panel de usuario.

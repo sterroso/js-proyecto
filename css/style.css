@@ -462,13 +462,10 @@ a {
 
 
 /* Contenedor del tablero de sudoku */
-#play-panel #sudoku-board-container {
+#play-panel #sudoku-board {
     width: 300px;
     height: 300px;
-}
-
-/* Tablero de Sudoku */
-#play-panel #sudoku-board-container #sudoku-board {
+    margin: 0.5rem 0;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
@@ -476,7 +473,7 @@ a {
 }
 
 /* Cada cuadro dentro del tablero de sudoku. */
-#play-panel #sudoku-board-container #sudoku-board .square {
+#play-panel #sudoku-board .square {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
@@ -484,12 +481,12 @@ a {
 }
 
 /* Cada celda dentro del cuadro del tablero de sudoku. */
-#play-panel #sudoku-board-container #sudoku-board .square .cell {
+#play-panel #sudoku-board .square .cell {
     border: solid 0.5px var(--color-border);
 }
 
 /* Elemento de texto que guarda el valor de cada celda. */
-#play-panel #sudoku-board-container #sudoku-board .square .cell .cell-text {
+#play-panel #sudoku-board .square .cell .cell-text {
     text-align: center;
 }
 

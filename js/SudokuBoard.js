@@ -55,11 +55,11 @@ class SudokuBoard {
         // Hacerlo, por lo menos, una vez:
         do {
             // Intentar llenar la cuadrícula con números válidos.
-            this.baseGrid = this.getBaseGrid();
+            this.baseGrid = this.fillBaseGrid();
         } while(!SudokuBoard.isValidGrid(this.baseGrid));    // Hasta que la cuadrícula sea válida.
 
         // Genera la cuadrícula 'jugable' para el jugador.
-        this.playerGrid = this.getPlayerGrid();
+        this.playerGrid = this.fillPlayerGrid();
     }
 
 
@@ -97,17 +97,7 @@ class SudokuBoard {
      * Establece la cuadrícula base.
      */
     set baseGrid(value) {
-        this._baseGrid = value || [
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        ];
+        this._baseGrid = value || this.fillBaseGrid();
     }
 
 
@@ -123,17 +113,7 @@ class SudokuBoard {
      * Establece la cuadrícula del jugador.
      */
     set playerGrid(value) {
-        this._playerGrid = value || [
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        ];
+        this._playerGrid = value || this.fillPlayerGrid();
     }
 
 
@@ -148,11 +128,6 @@ class SudokuBoard {
      * @returns true si el tablero ya está resuelto, false de lo contrario.
      */
     get solved () {
-        return this._solved;
-    }
-
-
-    validatePlayerGrid = () => {
         return this.playerGrid === this.baseGrid;
     }
 
@@ -162,88 +137,63 @@ class SudokuBoard {
      * 
      * @returns un fragmento html (documentFragment) con el tablero Sudoku.
      */
-    getBoardFragment = (parentNode) => {
-        // El fragmento html que continene al tablero de Sudoku
+    getBoardFragment = () => {
+        // El fragmento html que contendrá al tablero de Sudoku
         const boardFragment = document.createDocumentFragment();
 
-        const boardDiv = document.createElement('div');
-        boardDiv.id = 'sudoku-board';
-
         for (let squareIndex = 0; squareIndex < 9; squareIndex++) {
+            // El nodo de la submatriz correspondiente.
             const squareDiv = document.createElement('div');
             squareDiv.id = `square-${squareIndex}`;
             squareDiv.classList.add('square');
-            
-            switch (squareIndex) {
-                case 0:
-                    this.drawCellDiv(0, 0, squareDiv);
-                    boardDiv.appendChild(squareDiv);
-                    break;
-                
-                case 1:
-                    this.drawCellDiv(0, 3, squareDiv);
-                    boardDiv.appendChild(squareDiv);
-                    break;
-                
-                case 2:
-                    this.drawCellDiv(0, 6, squareDiv);
-                    boardDiv.appendChild(squareDiv);
-                    break;
 
-                case 3:
-                    this.drawCellDiv(3, 0, squareDiv);
-                    boardDiv.appendChild(squareDiv);
-                    break;
+            // Agrega la submatriz resultante al nodo div correspondiente.
+            squareDiv.appendChild(this.getSquareFragment(squareIndex));
 
-                case 4:
-                    this.drawCellDiv(3, 3, squareDiv);
-                    boardDiv.appendChild(squareDiv);
-                    break;
-
-                case 5:
-                    this.drawCellDiv(3, 6, squareDiv);
-                    boardDiv.appendChild(squareDiv);
-                    break;
-
-                case 6:
-                    this.drawCellDiv(6, 0, squareDiv);
-                    boardDiv.appendChild(squareDiv);
-                    break;
-
-                case 7:
-                    this.drawCellDiv(6, 3, squareDiv);
-                    boardDiv.appendChild(squareDiv);
-                    break;
-
-                case 8:
-                    this.drawCellDiv(6, 6, squareDiv);
-                    boardDiv.appendChild(squareDiv);
-                    break;
-                
-                default:
-                    break;
-            }
+            // Agrega el nodo div de la submatriz al tablero.
+            boardFragment.appendChild(squareDiv);
         }
 
-        boardFragment.appendChild(boardDiv);
-
+        // Devuelve el fragmento.
         return boardFragment;
     }
 
 
     /**
-     * Dibuja una submatriz (cuadro) de 3 filas x 3 columnas en el tablero de Sudoku.
+     * Devuelve un fragmento HTML con 9 celdas que corresponden a una
+     * submatriz de tres (3) filas x tres (3) columnas del tablero de
+     * Sudoku. La submatriz está difinida por el índice que puede tener
+     * un valor entre cero (0) y ocho (8), inclusive.
      * 
-     * @param {int} startRowIndex El índice de la primera fila de la subamtriz (cuadro)
-     * @param {int} startColIndex El índice de la primera columna de la submatriz (cuadro)
-     * @param {Node} parentNode El nodo padre en el que se dibujará la submatriz (cuadro)
+     * @param {int} squareIndex El índice entero de la submatriz. Puede tener un valor
+     * entre cero (0) y ocho (8).
+     * 
+     * @returns El fragmento HTML donde se encuentran las nueve (9) celdas que corresponden
+     * a la submatriz que comienza en la fila startRowIndex y la columna startColIndex.
      */
-    drawCellDiv = (startRowIndex, startColIndex, parentNode) => {
+    getSquareFragment = (squareIndex) => {
+        // El fragmento HTML que se devolverá.
+        const squareFragment = document.createDocumentFragment();
+
+        // El índice de la primera fila de la submatriz.
+        const startRowIndex = 3 * Math.floor(squareIndex / 3);
+
+        // El índice de la primera columna de la submatriz.
+        const startColIndex = 3 * (squareIndex % 3);
+
         for (let i = startRowIndex; i < startRowIndex + 3; i++) {
             for (let j = startColIndex; j < startColIndex + 3; j++) {
                 const cellDiv = document.createElement('div');
                 cellDiv.id = `cell-${9 * i + j}`;
-                cellDiv.classList.add('cell', `row-${i}`, `col-${j}`);
+                cellDiv.classList.add('cell', `row-${i}`, `col-${j}`, `square-${squareIndex}`);
+
+                cellDiv.addEventListener('click', event => {
+                    // TODO: Implement cell's click event listener
+                });
+
+                cellDiv.addEventListener('keypress', event => {
+                    // TODO: Implement cell's keypress event listener
+                });
 
                 const cellText = document.createElement('p');
                 cellText.id = `text-${9 * i + j}`;
@@ -266,9 +216,11 @@ class SudokuBoard {
                 cellNoteList.classList.add('cell-notes', 'hidden');
                 cellDiv.appendChild(cellNoteList);
 
-                parentNode.appendChild(cellDiv);
+                squareFragment.appendChild(cellDiv);
             }
         }
+
+        return squareFragment;
     }
 
 
@@ -279,19 +231,9 @@ class SudokuBoard {
      * columnas), lleno con números válidos, de acuerdo don las reglas 
      * del Sudoku.
      */
-    getBaseGrid = () => {
+    fillBaseGrid = () => {
         // Inicializa cuadrícula
-        const grid = [
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        ];
+        const grid = SudokuBoard.getEmptyGrid();
 
         // Inicializar las variables con las que se trabajará la cuadrícula.
         let intRow = 0;     // Índice entero de la fila.
@@ -360,14 +302,19 @@ class SudokuBoard {
      * 
      * @returns Una copia de la cuadrícula original con algunos elementos removidos.
      */
-     getPlayerGrid = () => {
+     fillPlayerGrid = () => {
         // Lista de las celdas 'visitadas' para borrar.
         const visitedCellArray = [];
 
         // Número aleatorio de celdas a borrar en cada cuadro.
         let randomCellDeleteAmount = 0;
 
-        // Clona la cuadrícula original para tener la solución como referencia y 
+        // Se asegura que la cuadrícula base esté llena
+        if (!this.baseGrid) {
+            this.baseGrid = this.fillBaseGrid();
+        }
+
+        // Clona la cuadrícula base para tener la solución como referencia y 
         // trabajar sobre el clon.
         const grid = this.baseGrid.slice().map(row => row.slice());
 
@@ -461,6 +408,24 @@ class SudokuBoard {
      */
     toString = () => {
         return `Tablero de Sudoku: Nivel de dificultad ${this.level.levelName}`;
+    }
+
+
+    /**
+     * Devuelve una cuadrícula 'vacía', llena de ceros (0's)
+     */
+     static getEmptyGrid = () => {
+        return [
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0]
+        ];
     }
 
 
