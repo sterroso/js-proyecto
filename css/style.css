@@ -469,7 +469,7 @@ a {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
-    border: solid 4px var(--color-border);
+    border: solid 2px var(--color-border);
 }
 
 /* Cada cuadro dentro del tablero de sudoku. */

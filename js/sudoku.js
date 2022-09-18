@@ -119,4 +119,3 @@ startButton.addEventListener('click', event => {
 
     startButton.classList.toggle('running');
 });
-

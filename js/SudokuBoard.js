@@ -2,12 +2,6 @@
  * Un tablero de Sudoku.
  */
 class SudokuBoard {
-    // Número de filas.
-    static NUM_ROWS = 9;
-
-    // Número de columnas.
-    static NUM_COLS = 9;
-
     /**
      * Define un tablero de Sudoku
      * 
@@ -18,39 +12,7 @@ class SudokuBoard {
 
         this._solved = false;
 
-        // Nodos html de los principales elementos del tablero
-        this.htmlNodes = {
-            squares: {
-                commonClassList: ['square'],
-                commonNodeIdPrefix: 'square-',
-                elements: [
-                    { index: 0, cellsIndexes: [0, 1, 2, 9, 10, 11, 18, 19, 20] }, 
-                    { index: 1, cellsIndexes: [3, 4, 5, 12, 13, 14, 21, 22, 23] }, 
-                    { index: 2, cellsIndexes: [6, 7, 8, 15, 16, 17, 24, 25, 26] },
-                    { index: 3, cellsIndexes: [27, 28, 29, 36, 37, 38, 45, 46, 47] }, 
-                    { index: 4, cellsIndexes: [30, 31, 32, 39, 40, 41, 48, 49, 50] }, 
-                    { index: 5, cellsIndexes: [33, 34, 35, 42, 43, 44, 51, 52, 53] },
-                    { index: 6, cellsIndexes: [54, 55, 56, 63, 64, 65, 72, 73, 74] }, 
-                    { index: 7, cellsIndexes: [57, 58, 59, 66, 67, 68, 75, 76, 77] }, 
-                    { index: 8, cellsIndexes: [60, 61, 62, 69, 70, 71, 78, 79, 80] },
-                ]
-            },
-            cells: {
-                commonClassList: ['cell'],
-                commonNodeIdPrefix: 'cell-',
-                elements: [
-                    { index: 0 }, { index: 1 }, { index: 2 }, { index: 3 }, { index: 4 }, { index: 5 }, { index: 6 }, { index: 7 }, { index: 8 },
-                    { index: 9 }, { index: 10 }, { index: 11 }, { index: 12 }, { index: 13 }, { index: 14 }, { index: 15 }, { index: 16 }, { index: 17 },
-                    { index: 18 }, { index: 19 }, { index: 20 }, { index: 21 }, { index: 22 }, { index: 23 }, { index: 24 }, { index: 25 }, { index: 26 },
-                    { index: 27 }, { index: 28 }, { index: 29 }, { index: 30 }, { index: 31 }, { index: 32 }, { index: 33 }, { index: 34 }, { index: 35 },
-                    { index: 36 }, { index: 37 }, { index: 38 }, { index: 39 }, { index: 40 }, { index: 41 }, { index: 42 }, { index: 43 }, { index: 44 },
-                    { index: 45 }, { index: 46 }, { index: 47 }, { index: 48 }, { index: 49 }, { index: 50 }, { index: 51 }, { index: 52 }, { index: 53 },
-                    { index: 54 }, { index: 55 }, { index: 56 }, { index: 57 }, { index: 58 }, { index: 59 }, { index: 60 }, { index: 61 }, { index: 62 },
-                    { index: 63 }, { index: 64 }, { index: 65 }, { index: 66 }, { index: 67 }, { index: 68 }, { index: 69 }, { index: 70 }, { index: 71 },
-                    { index: 72 }, { index: 73 }, { index: 74 }, { index: 75 }, { index: 76 }, { index: 77 }, { index: 78 }, { index: 79 }, { index: 80 }
-                ],
-            },
-        };
+        this.selectedCellId = null;
 
         // Hacerlo, por lo menos, una vez:
         do {
@@ -60,6 +22,12 @@ class SudokuBoard {
 
         // Genera la cuadrícula 'jugable' para el jugador.
         this.playerGrid = this.fillPlayerGrid();
+
+        // Crea un arreglo donde se guardarán los objetos SudokuCell.
+        this._cells = [];
+
+        // Inicializa el arreglo de objetos SudokuCell.
+        this.initCells();
     }
 
 
@@ -117,9 +85,24 @@ class SudokuBoard {
     }
 
 
+    /**
+     * Devuelve la cuadrícula del jugador.
+     */
     get playerGrid() {
         return this._playerGrid;
     }
+
+
+    /**
+     * Previene la modificación de las celdas.
+     */
+    set cells(cells) { return false; }
+
+
+    /**
+     * Devuelve una referencia a las celdas.
+     */
+    get cells() { return this._cells; }
 
 
     /**
@@ -129,6 +112,26 @@ class SudokuBoard {
      */
     get solved () {
         return this.playerGrid === this.baseGrid;
+    }
+
+
+    /**
+     * Crea las celdas que componen el tablero.
+     */
+    initCells = () => {
+        let intRow = 0;
+        let intCol = 0;
+        let gridValue = 0;
+        let fixedCell = true;
+
+        for (let cellIndex = 0; cellIndex < 81; cellIndex++) {
+            intRow = Math.floor(cellIndex / 9);
+            intCol = cellIndex % 9;
+            gridValue = this.playerGrid[intRow][intCol];
+            fixedCell = gridValue !== 0;
+            
+            this.cells.push(new SudokuCell(cellIndex, gridValue, fixedCell));
+        }
     }
 
 
@@ -147,8 +150,11 @@ class SudokuBoard {
             squareDiv.id = `square-${squareIndex}`;
             squareDiv.classList.add('square');
 
-            // Agrega la submatriz resultante al nodo div correspondiente.
-            squareDiv.appendChild(this.getSquareFragment(squareIndex));
+            // Filtra las celdas que corresponden a la submatriz correspondiente.
+            const squareCells = this.cells.filter(cell => cell.squareIndex === squareIndex);
+
+            // Agrega los fragmentos de las celdas filtrada al nodo div de la submatriz.
+            squareCells.forEach(cell => squareDiv.appendChild(cell.cellNode));
 
             // Agrega el nodo div de la submatriz al tablero.
             boardFragment.appendChild(squareDiv);
@@ -156,71 +162,6 @@ class SudokuBoard {
 
         // Devuelve el fragmento.
         return boardFragment;
-    }
-
-
-    /**
-     * Devuelve un fragmento HTML con 9 celdas que corresponden a una
-     * submatriz de tres (3) filas x tres (3) columnas del tablero de
-     * Sudoku. La submatriz está difinida por el índice que puede tener
-     * un valor entre cero (0) y ocho (8), inclusive.
-     * 
-     * @param {int} squareIndex El índice entero de la submatriz. Puede tener un valor
-     * entre cero (0) y ocho (8).
-     * 
-     * @returns El fragmento HTML donde se encuentran las nueve (9) celdas que corresponden
-     * a la submatriz que comienza en la fila startRowIndex y la columna startColIndex.
-     */
-    getSquareFragment = (squareIndex) => {
-        // El fragmento HTML que se devolverá.
-        const squareFragment = document.createDocumentFragment();
-
-        // El índice de la primera fila de la submatriz.
-        const startRowIndex = 3 * Math.floor(squareIndex / 3);
-
-        // El índice de la primera columna de la submatriz.
-        const startColIndex = 3 * (squareIndex % 3);
-
-        for (let i = startRowIndex; i < startRowIndex + 3; i++) {
-            for (let j = startColIndex; j < startColIndex + 3; j++) {
-                const cellDiv = document.createElement('div');
-                cellDiv.id = `cell-${9 * i + j}`;
-                cellDiv.classList.add('cell', `row-${i}`, `col-${j}`, `square-${squareIndex}`);
-
-                cellDiv.addEventListener('click', event => {
-                    // TODO: Implement cell's click event listener
-                });
-
-                cellDiv.addEventListener('keypress', event => {
-                    // TODO: Implement cell's keypress event listener
-                });
-
-                const cellText = document.createElement('p');
-                cellText.id = `text-${9 * i + j}`;
-                cellText.classList.add('cell-text');
-                cellDiv.appendChild(cellText);
-
-                const cellValue = document.createElement('span');
-                cellValue.id = `value-${9 * i + j}`;
-                cellValue.classList.add('cell-value', 'hidden');
-
-                if (this.playerGrid[i][j] !== 0) {
-                    cellValue.textContent = `${this.playerGrid[i][j]}`;
-                    cellValue.classList.toggle('hidden');
-                }
-
-                cellText.appendChild(cellValue);
-
-                const cellNoteList = document.createElement('ul');
-                cellNoteList.id = `notes-${9 * i + j}`;
-                cellNoteList.classList.add('cell-notes', 'hidden');
-                cellDiv.appendChild(cellNoteList);
-
-                squareFragment.appendChild(cellDiv);
-            }
-        }
-
-        return squareFragment;
     }
 
 
