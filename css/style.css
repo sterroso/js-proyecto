@@ -48,6 +48,8 @@
     --color-highligh-fg: #00ff00;
     --color-highlight-bg: #1b1b1b;
     --color-highlight-border: #9dcb8b;
+    --color-selected-bg: #ffffff;
+    --color-selected-fg: #000000;
     --color-note: #00ff00;
  }
 
@@ -103,6 +105,10 @@ a {
 /* Elementos ocultos */
 .hidden {
     display: none;
+}
+
+.invisible {
+    visibility: hidden;
 }
 
 /*******************************************************************************
@@ -443,6 +449,9 @@ a {
 }
 
 
+
+/************************** Panel de juego (tablero) **************************/
+
 #play-panel {
     display: flex;
     flex-direction: column;
@@ -483,11 +492,33 @@ a {
 /* Cada celda dentro del cuadro del tablero de sudoku. */
 #play-panel #sudoku-board .square .cell {
     border: solid 0.5px var(--color-border);
+    padding: 2px;
 }
 
 /* Elemento de texto que guarda el valor de cada celda. */
-#play-panel #sudoku-board .square .cell .cell-text {
+#play-panel #sudoku-board .square .cell .value-container {
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 50%;
     text-align: center;
+}
+
+#play-panel #sudoku-board .square .cell .value-container.fixed-value {
+    background-color: #ababab;
+    color: #181818;
+}
+
+/* Elemento resaltado */
+#play-panel #sudoku-board .square .cell.highlighted .value-container {
+    background-color: var(--color-highlight-bg);
+    color: var(--color-highligh-fg);
+}
+
+/* Celda seleccionada */
+#play-panel #sudoku-board .square .cell.selected .value-container {
+    background-color: var(--color-selected-bg);
+    color: var(--color-selected-fg);
 }
 
 

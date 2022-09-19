@@ -12,7 +12,7 @@ class SudokuBoard {
 
         this._solved = false;
 
-        this.selectedCellId = null;
+        this.selectedCell = null;
 
         // Hacerlo, por lo menos, una vez:
         do {
@@ -129,7 +129,7 @@ class SudokuBoard {
             intCol = cellIndex % 9;
             gridValue = this.playerGrid[intRow][intCol];
             fixedCell = gridValue !== 0;
-            
+
             this.cells.push(new SudokuCell(cellIndex, gridValue, fixedCell));
         }
     }
@@ -154,7 +154,38 @@ class SudokuBoard {
             const squareCells = this.cells.filter(cell => cell.squareIndex === squareIndex);
 
             // Agrega los fragmentos de las celdas filtrada al nodo div de la submatriz.
-            squareCells.forEach(cell => squareDiv.appendChild(cell.cellNode));
+            squareCells.forEach(cell => {
+                squareDiv.appendChild(cell.cellNode);
+
+                // Se establece un event listener únicamente para las celdas que no son fijas.
+                if (!cell.isFixed) {
+                    cell.cellNode.addEventListener('click', event => {
+                        const previousSelection = this.selectedCell;
+                        this.selectedCell = cell;
+
+                        // Si hay una celda previamente seleccionada
+                        if (previousSelection) {
+                            // Si la celda previamente seleccionada es la misma celda
+                            // sobre la que se registra el evento 'click'
+                            if (previousSelection.id === cell.id) {
+                                // Quitar selección sobre la celda actual y resaltado sobre adyacentes.
+                                this.#setCellSelected(cell.id, false);
+                                this.selectedCell = null;
+                            } else {
+                                // Quitar selección sobre celda anterior y el resaltado sobre sus 
+                                // adyacentes y, después, aplicar selección a celda actual y resaltado sobre
+                                // sus adyacentes.
+                                this.#setCellSelected(previousSelection.id, false);
+                                this.#setCellSelected(cell.id, true);
+                            }
+                        // No había una celda previamente seleccionada.
+                        } else {
+                            // Aplicar selección a celda actual y resaltado sobre sus adyacentes.
+                            this.#setCellSelected(cell.id, true);
+                        }
+                    });
+                }
+            });
 
             // Agrega el nodo div de la submatriz al tablero.
             boardFragment.appendChild(squareDiv);
@@ -162,6 +193,78 @@ class SudokuBoard {
 
         // Devuelve el fragmento.
         return boardFragment;
+    }
+
+
+    /**
+     * Establece o quita la selección sobre una celda, según su identificador (id).
+     * 
+     * @param {int} cellId El identificador de la celda cuya selección se modificará.
+     * @param {boolean} selected Verdadero (true) si se desea seleccionar esa
+     * celda, Falso (false) si se desea quitar la selección de esa celda.
+     */
+    #setCellSelected = (cellId, selected = false) => {
+        const selectedCell = this.cells.find(cell => cell.id === cellId);
+        const rowIndex = selectedCell.rowIndex;
+        const colIndex = selectedCell.colIndex;
+        const squareIndex = selectedCell.squareIndex;
+
+        selectedCell.isSelected = selected;
+
+        this.#setRowHighlighted(rowIndex, selected);
+        this.#setColHighlighted(colIndex, selected);
+        this.#setSquareHighlighted(squareIndex, selected);
+    }
+
+
+    /**
+     * Establece o quita el resaltado sobre una fila de celdas según su índice (rowIndex).
+     * 
+     * @param {int} rowIndex El índice de la fila cuyo resaltado se modificará. Sus valores
+     * pueden ser entre cero (0) y ocho (8), inclusive.
+     * @param {boolean} highlighted Verdadero (true) si se desea resaltar esa fila, Falso
+     * (false) si se desea quitar el resaltado de esa fila.
+     */
+    #setRowHighlighted = (rowIndex, highlighted = false) => {
+        this.cells.forEach(cell => {
+            if (cell.rowIndex === rowIndex) {
+                cell.isHighlighted = highlighted;
+            }
+        });
+    }
+
+
+    /**
+     * Establece o quita el resaltado sobre una columna de celdas según su índice (colIndex).
+     * 
+     * @param {int} colIndex El índice de la columna cuyo resaltado se modificará. Sus
+     * valores pueden ser entre cero (0) y ocho (8), inclusive.
+     * @param {boolean} highlighted Verdadero (true) si se desea resaltar esa columna, Falso
+     * (false) si se desea quitar el resaltado de esa columna.
+     */
+    #setColHighlighted = (colIndex, highlighted = false) => {
+        this.cells.forEach(cell => {
+            if (cell.colIndex === colIndex) {
+                cell.isHighlighted = highlighted;
+            }
+        });
+    }
+
+
+    /**
+     * Establece o quita el resaltado sobre una submatriz de celdas, según su índice (squareIndex).
+     * 
+     * @param {int} squareIndex El índice de la submatriz cuyo resaltado se modificará. Sus
+     * valores pueden ser entre cero (0) y ocho (8), inclusive.
+     * @param {boolean} highlighted Verdadero (true) si se desea resaltar esa submatriz,
+     * Falso (false) si se desea quitar el resaltado de esa submatriz.
+     */
+    #setSquareHighlighted = (squareIndex, highlighted = false) => {
+        this.cells.forEach(cell => {
+            if (cell.squareIndex === squareIndex) {
+                cell.isHighlighted = highlighted;
+            }
+        });
     }
 
 

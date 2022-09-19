@@ -1,12 +1,12 @@
 class SudokuCell {
     constructor(id, value = null, fixed = true) {
         this.id = id;
-        this.value = value;
         this._isFixed = fixed;
         this._valueNode = null;
         this._notesNode = null;
         this._cellNode = null;
         this.#initCellNode();
+        this.value = value;
         this.isSelected = false;
         this.isHighlighted = false;
     }
@@ -22,7 +22,7 @@ class SudokuCell {
      * @param {int} idValue El identificador de la celda.
      */
     set id(idValue) {
-        if (idValue && (idValue >= 0 && idValue <= 80)) {
+        if (idValue >= 0 && idValue <= 80) {
             this._id = idValue;
         } else {
             this._id = -1;
@@ -95,6 +95,12 @@ class SudokuCell {
      */
     set value(value) {
         this._value = (value && value >= 1 && value <= 9) ? value : 0;
+
+        if (value === 0) {
+            this.valueNode.textContent = '';
+        } else {
+            this.valueNode.textContent = value;
+        }
     }
 
 
@@ -145,6 +151,8 @@ class SudokuCell {
      * @param {boolean} value El valor de la propiedad isHighlighted.
      */
     set isHighlighted(value) {
+        this._isHighlighted = value;
+
         if (value) {
             this.cellNode.classList.add('highlighted');
         } else {
@@ -154,17 +162,31 @@ class SudokuCell {
 
 
     /**
+     * Devuelve el valor de la propiedad isHighlighted (resaltado) de la Celda.
+     */
+    get isHighlighted() { return this._isHighlighted; }
+
+
+    /**
      * Establece la propiedad isSelected (selección) de la Celda.
      * 
      * @param {boolean} value El valor de la propiedad isSelected.
      */
     set isSelected(value) {
+        this._isSelected = value;
+
         if (value) {
             this.cellNode.classList.add('selected');
         } else {
             this.cellNode.classList.remove('selected');
         }
     }
+
+
+    /**
+     * Devuelve el valor de la propiedad isSelected (selección) de la Celda.
+     */
+    get isSelected() { return this._isSelected; }
 
 
     /**
@@ -209,7 +231,6 @@ class SudokuCell {
         this.valueNode.classList.add('value-container');
         if (this.isFixed) {
             this.valueNode.classList.add('fixed-value');
-            this.valueNode.textContent = this.value;
         }
 
         this.cellNode.appendChild(this.valueNode);

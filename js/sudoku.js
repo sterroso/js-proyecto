@@ -88,6 +88,8 @@ startButton.addEventListener('click', event => {
 
         game.stop();
 
+        document.removeEventListener('keyup', handleKeyboardEvents);
+
         clearInterval(timerIntervalId);
 
         if (game.settings.showTimer) {
@@ -104,6 +106,8 @@ startButton.addEventListener('click', event => {
 
         game.start();
 
+        document.addEventListener('keyup', handleKeyboardEvents);
+
         timerIntervalId = setInterval(() => {
             if (game.settings.showTimer) {
                 timerContainer.textContent = game.getCurrentTimerString();
@@ -119,3 +123,31 @@ startButton.addEventListener('click', event => {
 
     startButton.classList.toggle('running');
 });
+
+const handleKeyboardEvents = event => {
+    const validKeys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'Backspace', 'Delete'];
+
+    if (event.key in validKeys) {
+        if (game.board.selectedCell) {
+            switch (event.key) {
+                case '1':
+                case '2':
+                case '3':
+                case '4':
+                case '5':
+                case '6':
+                case '7':
+                case '8':
+                case '9':
+                    game.board.selectedCell.value = parseInt(event.key);
+                    break;
+                case 'Backspace':
+                case 'Delete':
+                    game.board.selectedCell.value = 0;
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+}
