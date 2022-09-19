@@ -106,12 +106,26 @@ class SudokuBoard {
 
 
     /**
+     * Previene la modificación de la propiedad solved.
+     */
+    set solved(value) { return false; }
+
+
+    /**
      * Indica si el tablero de Sudoku ya está resuelto.
      * 
      * @returns true si el tablero ya está resuelto, false de lo contrario.
      */
     get solved () {
-        return this.playerGrid === this.baseGrid;
+        return this._solved;
+    }
+
+
+    /**
+     * Devuelve el número de celdas pendientes por asignar valor.
+     */
+    get remainingCells() {
+        return this.cells.filter(cell => cell.value === 0 ).length;
     }
 
 

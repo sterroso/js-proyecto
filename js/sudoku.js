@@ -125,7 +125,13 @@ startButton.addEventListener('click', event => {
 });
 
 const handleKeyboardEvents = event => {
-    const validKeys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'Backspace', 'Delete'];
+    const validKeys = [
+                '1', '2', '3',
+                '4', '5', '6',
+                '7', '8', '9',
+                'Backspace',
+                'Delete'
+            ];
 
     if (event.key in validKeys) {
         if (game.board.selectedCell) {
