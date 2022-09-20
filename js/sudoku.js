@@ -154,6 +154,13 @@ const handleKeyboardEvents = event => {
                 default:
                     break;
             }
+
+            if (game.board.remainingCells === 0) {
+                console.log(`isValidPlayerSolution: ${game.board.isValidPlayerSolution()}`);
+                if (game.board.isValidPlayerSolution()) {
+                    game.terminate(SudokuGame.TERMINATION_CAUSE.SUCCESS);
+                }
+            }
         }
     }
 }

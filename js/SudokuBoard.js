@@ -459,6 +459,17 @@ class SudokuBoard {
     }
 
 
+    isValidPlayerSolution = () => {
+        let allCellsMatch = true;
+
+        for (let cell of this.cells) {
+            allCellsMatch &&= cell.value === this.baseGrid[cell.rowIndex][cell.colIndex];
+        }
+
+        return allCellsMatch;
+    }
+
+
     /**
      * Devuelve una cadena de caracteres que indica el nivel de dificultad del tablero.
      * 

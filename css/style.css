@@ -493,6 +493,7 @@ a {
 #play-panel #sudoku-board .square .cell {
     border: solid 0.5px var(--color-border);
     padding: 2px;
+    cursor: pointer;
 }
 
 /* Elemento de texto que guarda el valor de cada celda. */
@@ -627,7 +628,6 @@ a {
     display: flex;
     justify-content: center;
     align-items: center;
-    cursor: pointer;
 }
 
 
